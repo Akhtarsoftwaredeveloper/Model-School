@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>GMHSS Pishin - Student Management</title>
+    <!-- Google Fonts for Noto Nastaliq Urdu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -26,7 +30,7 @@
             justify-content: center;
         }
         
-        /* Jameel Noori Nastaleeq Font */
+        /* Jameel Noori Nastaleeq Font - Improved with multiple sources and fallbacks */
         @font-face {
             font-family: 'Jameel Noori Nastaleeq';
             src: url('https://fonts.jameelnoori.com/jameel-noori-nastaleeq.woff2') format('woff2'),
@@ -37,21 +41,65 @@
             font-display: swap;
         }
         
+        /* Additional backup sources for better compatibility */
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: local('Jameel Noori Nastaleeq'),
+                 local('Jameel Noori Nastaleeq Regular'),
+                 url('https://raw.githubusercontent.com/nawzil/jameel-noori-nastaleeq/master/Jameel%20Noori%20Nastaleeq.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Font stack with multiple fallbacks */
         .urdu-text { 
-            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif !important; 
+            font-family: 'Jameel Noori Nastaleeq', 'Jameel Noori Nastaleeq Regular', 'Noto Nastaliq Urdu', 'AlQalam Shahzaib', 'Arial Unicode MS', 'sans-serif' !important; 
             direction: rtl; 
             font-size: 1.3rem; 
             line-height: 2;
+            font-weight: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Force Urdu font on all Urdu elements */
+        .urdu-text, 
+        [lang="ur"],
+        .school-name-urdu,
+        #schoolNameUrdu,
+        .estd-badge,
+        .nav-text,
+        .tab-text,
+        .stat-label,
+        .btn,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+        }
+        
+        /* When Urdu mode is active */
+        body.urdu-mode,
+        body.urdu-mode .header *,
+        body.urdu-mode .bottom-nav *,
+        body.urdu-mode .tab-bar *,
+        body.urdu-mode .stat-card *,
+        body.urdu-mode .btn,
+        body.urdu-mode input,
+        body.urdu-mode select,
+        body.urdu-mode textarea {
+            font-family: 'Jameel Noori Nastaleeq', 'Jameel Noori Nastaleeq Regular', 'Noto Nastaliq Urdu', 'sans-serif' !important;
         }
         
         /* === FULL MOBILE SCREEN – STRETCHES TO FIT ANY DEVICE === */
         .mobile-container { 
             width: 100%;
-            min-height: 100vh;          /* full viewport height */
-            background: #ffffff;          /* white background for entire container */
+            min-height: 100vh;
+            background: #ffffff;
             display: flex;
             flex-direction: column;
-            box-shadow: none;             /* no side margins */
+            box-shadow: none;
             border-radius: 0;
         }
         
@@ -64,11 +112,10 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            border-bottom: 4px solid #2e7d32;  /* deep green accent */
+            border-bottom: 4px solid #2e7d32;
             box-shadow: 0 4px 12px rgba(0,80,0,0.08);
         }
         
-        /* Logo – green themed */
         .logo-container img {
             width: 110%;
             height: 90%;
@@ -76,7 +123,6 @@
             display: block;
         }
         
-        /* fallback icon (green on white) */
         .logo-img {
             width: 100%;
             height: 100%;
@@ -85,27 +131,18 @@
             align-items: center;
             justify-content: center;
             font-size: 4rem;
-            color: #2e7d32;   /* green */
-        }
-        
-        .school-name-en { 
-            font-size: 2rem;             /* big and clear */
-            font-weight: 800; 
-            color: #1b5e20;               /* dark green */
-            letter-spacing: -0.3px;
-            line-height: 0.5;
-            margin-bottom: 2px;
+            color: #2e7d32;
         }
         
         .school-name-urdu { 
-            font-family: 'Jameel Noori Nastaleeq', serif; 
+            font-family: 'Jameel Noori Nastaleeq', 'Jameel Noori Nastaleeq Regular', 'Noto Nastaliq Urdu', 'sans-serif' !important; 
             font-size: 2.2rem; 
-            color: #006400 ;                /* dark green */
+            color: #006400;
             margin-top: 4px;
         }
         
         .estd-badge { 
-            background: #004225;            /* green */
+            background: #004225;
             color: #ffffff; 
             display: inline-block; 
             padding: 10px 30px; 
@@ -116,10 +153,9 @@
             margin-top: 5px;
         }
         
-        /* === ALL OTHER ELEMENTS – WHITE/GREEN THEME (NO DARK BLUE) === */
         .lang-switcher { 
             display: flex; 
-            background: #e8f5e9;            /* very light green */
+            background: #e8f5e9;
             border-radius: 50px; 
             margin: 18px 16px 12px; 
             padding: 4px;
@@ -151,7 +187,7 @@
         }
         
         .stat-card { 
-            background: #f1f8e9;            /* soft green-white */
+            background: #f1f8e9;
             flex: 1; 
             padding: 16px 4px; 
             border-radius: 24px; 
@@ -206,7 +242,6 @@
         .panel { display: none; padding: 0 16px 20px; flex: 1; }
         .panel.active { display: block; }
         
-        /* Form elements – white/green */
         .form-group { margin-bottom: 15px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
@@ -231,7 +266,18 @@
         input::placeholder { color: #81c784; }
         select option { background: #ffffff; color: #1b5e20; }
         
-        /* Photo area – green tint */
+        /* DOB in Words field - read-only style */
+        input[readonly] {
+            background-color: #f5f5f5;
+            color: #2e7d32;
+            font-weight: 500;
+            cursor: default;
+        }
+        
+        .urdu-mode input[readonly] {
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif !important;
+        }
+        
         .photo-area { 
             display: flex; 
             gap: 15px; 
@@ -269,7 +315,6 @@
         .gallery-btn { background: #ffffff; color: #1b5e20; border: 1px solid #a5d6a7; }
         .photo-hint { font-size: 0.75rem; color: #2e7d32; margin: 5px 15px; text-align: center; }
         
-        /* Buttons – green primary */
         .btn { 
             width: 100%; 
             padding: 16px; 
@@ -294,7 +339,6 @@
         .btn-danger { background: #d32f2f; color: white; }
         .btn-info { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
 
-        /* filter section – green */
         .class-filter-section {
             background: #f1f8e9; border-radius: 24px; padding: 16px; margin-bottom: 16px; border: 1px solid #c8e6c9;
         }
@@ -306,7 +350,6 @@
         .class-badge .count { background: #c8e6c9; padding: 2px 6px; border-radius: 15px; font-size: 0.7rem; color:#1b5e20; }
         .class-badge.active .count { background: #81c784; color: #1b5e20; }
         
-        /* student cards – white/green */
         .student-card { 
             background: #ffffff; border-radius: 24px; padding: 16px; margin-bottom: 12px; 
             display: flex; gap: 15px; border: 1px solid #c8e6c9; box-shadow: 0 4px 12px rgba(0,30,0,0.03);
@@ -322,7 +365,6 @@
         .action-btn.edit { background: #ffb300; color: #1f2a0e; }
         .action-btn.delete { background: #d32f2f; color: white; }
         
-        /* bottom nav – green */
         .bottom-nav { 
             background: #ffffff; padding: 12px 20px; display: flex; justify-content: space-around; 
             border-top: 3px solid #2e7d32; box-shadow: 0 -4px 12px rgba(0,30,0,0.05);
@@ -342,7 +384,6 @@
         .class-stat-item .class-name { font-weight: 600; color: #1b5e20; font-size: 0.75rem; }
         .class-stat-item .class-count { font-size: 1.2rem; font-weight: 700; color: #2e7d32; }
 
-        /* cropper & modals – green tint */
         .cropper-modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,30,0,0.9); display: none; justify-content: center; align-items: center; z-index: 3000; }
         .cropper-container { background: #ffffff; padding: 20px; border-radius: 30px; width: 90%; max-width: 400px; border: 3px solid #2e7d32; }
         .cropper-container h3 { color: #1b5e20; }
@@ -370,23 +411,22 @@
 </head>
 <body>
 <div class="mobile-container">
-    <!-- ===== HEADER – WHITE + GREEN, CENTERED ===== -->
+    <!-- ===== HEADER ===== -->
     <div class="header">
         <div class="logo-container">
-            <!-- replace with your actual logo if needed -->
-            <img src="https://lh3.googleusercontent.com/gg/AMW1TPq1GlLgRNUbbKZ6gZPLe7aw6oCjefBOEdEzX2DjvKPYhv1fBSjmuX1PziOXNUA9u02uDDvOjWK9FRuCf_Wa4N0aeCf-wpg0ODorwOkNR_4vQjX3GVgEYomVIezk-uDxyPbPiyCXqWtwUzo3G9qQSdicHJcw7Tcy_q3JxwlGZnkzlSGMCT8JXj_ktRpoPysOMvxmJCVOT-6xVYpPN9jPVVU4tCeOIGUXU-urT5sj2PPCxpm2Ffr0nhL3y7XIyiSmmolCv7YdbdrXvotIcxxUq5TRsDG1xadqvK7p6oT0y78oQizzeStSk_Ve90aS49i_TAkLliaP5KYFJR2lzVVXxd-U=s1024-rj" 
+            <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
                  alt="School Logo" 
                  class="logo-img"
                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
         </div>
         <div class="header-text">
-            <div class="school-name-en" id="schoolNameEn">GMHSS Pishin</div>
-            <div class="school-name-urdu" id="schoolNameUrdu">گورنمنٹ ماڈل ہائر سیکنڈری سکول</div>
+            <!-- ONLY URDU NAME (AS REQUESTED) -->
+            <div class="school-name-urdu" id="schoolNameUrdu">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
         </div>
         <div class="estd-badge" id="estdBadge"> Since 1890 • پشین</div>
     </div>
     
-    <!-- language switch – green theme -->
+    <!-- language switch -->
     <div class="lang-switcher">
         <button class="lang-btn active" id="btnEnglish"><i class="fas fa-globe"></i> English</button>
         <button class="lang-btn" id="btnUrdu"><i class="fas fa-globe"></i> اردو</button>
@@ -460,6 +500,9 @@
                 <input type="date" id="dob" required>
                 <input type="date" id="admissionDate" required> 
             </div>
+            <!-- NEW FIELD: Date of Birth in Words (Read-only) -->
+            <input type="text" id="dobInWords" placeholder="Date of Birth in Words" readonly class="form-group" style="background-color: #f9fff9;">
+            
             <button type="submit" class="btn btn-primary" id="saveBtn"><i class="fas fa-save"></i> Save to Firebase</button>
             <button type="button" class="btn btn-success hidden" id="updateBtn"><i class="fas fa-edit"></i> Update Record</button>
         </form>
@@ -548,8 +591,7 @@
     // Translations
     const translations = {
         en: { 
-            schoolName:"GMHSS Pishin", 
-            schoolNameUrdu:"گورنمنٹ ماڈل ہائر سیکنڈری اسکول", 
+            schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
             estd:"📅 Since 1890 • پشین", 
             total:"Total Students", 
             classes:"Classes", 
@@ -577,6 +619,7 @@
             fatherNameLabel:"Father's Name", 
             phoneLabel:"Phone", 
             dobLabel:"Date of Birth", 
+            dobInWordsLabel:"Date of Birth in Words",
             admissionDateLabel:"Admission Date", 
             saving:"Saving...", 
             updating:"Updating...", 
@@ -590,8 +633,7 @@
             clearFilter:"Clear" 
         },
         ur: { 
-            schoolName:"گورنمنٹ ماڈل ہائر سیکنڈری اسکول", 
-            schoolNameUrdu:"گورنمنٹ ماڈل ہائر سیکنڈری اسکول", 
+            schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
             estd:"📅 1890ء سے • پشین", 
             total:"کل طلباء", 
             classes:"کلاسز", 
@@ -619,6 +661,7 @@
             fatherNameLabel:"والد کا نام", 
             phoneLabel:"فون نمبر", 
             dobLabel:"تاریخ پیدائش", 
+            dobInWordsLabel:"تاریخ پیدائش الفاظ میں",
             admissionDateLabel:"تاریخ داخلہ", 
             saving:"محفوظ ہو رہا ہے...", 
             updating:"اپ ڈیٹ ہو رہا ہے...", 
@@ -633,11 +676,124 @@
         }
     };
 
+    // ==================== DATE TO WORDS CONVERSION FUNCTIONS ====================
+    function dateToWords(dateString) {
+        if (!dateString) return '';
+        
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        
+        const urduMonths = [
+            'جنوری', 'فروری', 'مارچ', 'اپریل', 'مئی', 'جون',
+            'جولائی', 'اگست', 'ستمبر', 'اکتوبر', 'نومبر', 'دسمبر'
+        ];
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            
+            if (isUrdu) {
+                // Urdu format: "پندرہ جنوری دو ہزار بائیس"
+                return `${convertToUrduWords(day)} ${urduMonths[month]} ${convertYearToUrduWords(year)}`;
+            } else {
+                // English format: "Fifteenth January Two Thousand Twenty-Two"
+                const dayWord = getOrdinalWord(day);
+                const monthWord = months[month];
+                const yearWord = convertYearToWords(year);
+                return `${dayWord} ${monthWord} ${yearWord}`;
+            }
+        } catch (e) {
+            console.error('Date conversion error:', e);
+            return '';
+        }
+    }
+    
+    function getOrdinalWord(num) {
+        const ordinals = [
+            'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth',
+            'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth',
+            'Eighteenth', 'Nineteenth', 'Twentieth', 'Twenty-First', 'Twenty-Second', 'Twenty-Third',
+            'Twenty-Fourth', 'Twenty-Fifth', 'Twenty-Sixth', 'Twenty-Seventh', 'Twenty-Eighth',
+            'Twenty-Ninth', 'Thirtieth', 'Thirty-First'
+        ];
+        return ordinals[num - 1] || num.toString();
+    }
+    
+    function convertYearToWords(year) {
+        if (year < 1000) return year.toString();
+        
+        const thousands = Math.floor(year / 1000);
+        const remainder = year % 1000;
+        
+        if (remainder === 0) {
+            return numberToWords(thousands) + ' Thousand';
+        } else if (remainder < 100) {
+            return numberToWords(thousands) + ' Thousand ' + numberToWords(remainder);
+        } else {
+            const hundreds = Math.floor(remainder / 100);
+            const tens = remainder % 100;
+            if (tens === 0) {
+                return numberToWords(thousands) + ' Thousand ' + numberToWords(hundreds) + ' Hundred';
+            } else {
+                return numberToWords(thousands) + ' Thousand ' + numberToWords(hundreds) + ' Hundred ' + numberToWords(tens);
+            }
+        }
+    }
+    
+    function numberToWords(num) {
+        const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+            'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen',
+            'Eighteen', 'Nineteen'];
+        const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+        
+        if (num < 20) return ones[num];
+        if (num < 100) {
+            return tens[Math.floor(num / 10)] + (num % 10 ? ' ' + ones[num % 10] : '');
+        }
+        return num.toString();
+    }
+    
+    function convertToUrduWords(num) {
+        const urduNumbers = [
+            'صفر', 'ایک', 'دو', 'تین', 'چار', 'پانچ', 'چھ', 'سات', 'آٹھ', 'نو', 'دس',
+            'گیارہ', 'بارہ', 'تیرہ', 'چودہ', 'پندرہ', 'سولہ', 'سترہ', 'اٹھارہ', 'انیس',
+            'بیس', 'اکیس', 'بائیس', 'تئیس', 'چوبیس', 'پچیس', 'چھبیس', 'ستائیس',
+            'اٹھائیس', 'انتیس', 'تیس', 'اکتیس'
+        ];
+        return urduNumbers[num] || num.toString();
+    }
+    
+    function convertYearToUrduWords(year) {
+        if (year < 1000) return year.toString();
+        
+        const thousands = Math.floor(year / 1000);
+        const remainder = year % 1000;
+        
+        if (remainder === 0) {
+            return convertToUrduWords(thousands) + ' ہزار';
+        } else if (remainder < 100) {
+            return convertToUrduWords(thousands) + ' ہزار ' + convertToUrduWords(remainder);
+        } else {
+            const hundreds = Math.floor(remainder / 100);
+            const tens = remainder % 100;
+            if (tens === 0) {
+                return convertToUrduWords(thousands) + ' ہزار ' + convertToUrduWords(hundreds) + ' سو';
+            } else {
+                return convertToUrduWords(thousands) + ' ہزار ' + convertToUrduWords(hundreds) + ' سو ' + convertToUrduWords(tens);
+            }
+        }
+    }
+
     // ==================== LANGUAGE FUNCTIONS ====================
     function setLanguage(lang) {
         const t = translations[lang];
-        e('schoolNameEn').textContent = t.schoolName;
-        e('schoolNameUrdu').textContent = t.schoolNameUrdu;
+        e('schoolNameUrdu').textContent = t.schoolName;
         e('estdBadge').innerHTML = t.estd;
         e('totalLabel').textContent = t.total; 
         e('classesLabel').textContent = t.classes; 
@@ -648,6 +804,7 @@
         e('name').placeholder = t.studentName; 
         e('fatherName').placeholder = t.fatherName; 
         e('phone').placeholder = t.phone;
+        e('dobInWords').placeholder = t.dobInWordsLabel;
         e('saveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.save}`;
         e('updateBtn').innerHTML = `<i class="fas fa-edit"></i> ${t.update}`;
         e('searchInput').placeholder = t.search; 
@@ -659,8 +816,10 @@
         document.querySelector('#class option[value=""]').textContent = t.selectClass;
         
         if (lang === 'ur') {
+            document.body.classList.add('urdu-mode');
             document.body.classList.add('urdu-text');
         } else {
+            document.body.classList.remove('urdu-mode');
             document.body.classList.remove('urdu-text');
         }
         
@@ -681,6 +840,16 @@
         setLanguage('ur'); 
         e('btnUrdu').classList.add('active'); 
         e('btnEnglish').classList.remove('active'); 
+    });
+
+    // ==================== DOB AUTO-CONVERSION ====================
+    e('dob').addEventListener('change', function() {
+        const dobValue = this.value;
+        if (dobValue) {
+            e('dobInWords').value = dateToWords(dobValue);
+        } else {
+            e('dobInWords').value = '';
+        }
     });
 
     // ==================== PHOTO FUNCTIONS ====================
@@ -872,6 +1041,7 @@
         e('studentPhoto').classList.add('hidden'); 
         e('userIcon').classList.remove('hidden'); 
         e('studentPhoto').src = ''; 
+        e('dobInWords').value = '';
         currentId = null; 
         e('saveBtn').classList.remove('hidden'); 
         e('updateBtn').classList.add('hidden'); 
@@ -892,6 +1062,7 @@
         e('phone').value = s.phone || ''; 
         e('dob').value = s.dob || ''; 
         e('admissionDate').value = s.admissionDate || ''; 
+        e('dobInWords').value = s.dobInWords || dateToWords(s.dob) || '';
         
         if (s.photo) { 
             e('studentPhoto').src = s.photo; 
@@ -932,6 +1103,8 @@
     function generateCertificate(s) { 
         const t = translations[isUrdu ? 'ur' : 'en']; 
         const today = new Date().toLocaleDateString(); 
+        const dobInWords = s.dobInWords || dateToWords(s.dob) || '';
+        
         const html = `<div class="certificate">
             <h1>${t.schoolName}</h1>
             <h2>${t.certificate}</h2>
@@ -942,6 +1115,7 @@
                 <p><strong>${t.fatherNameLabel}:</strong> ${s.fatherName}</p>
                 <p><strong>${t.phoneLabel}:</strong> ${s.phone}</p>
                 <p><strong>${t.dobLabel}:</strong> ${new Date(s.dob).toLocaleDateString()}</p>
+                <p><strong>${t.dobInWordsLabel}:</strong> ${dobInWords}</p>
                 <p><strong>${t.admissionDateLabel}:</strong> ${new Date(s.admissionDate).toLocaleDateString()}</p>
             </div>
             <div class="certificate-footer">
@@ -974,6 +1148,7 @@
             "Father's Name": s.fatherName, 
             'Phone': s.phone, 
             'DOB': new Date(s.dob).toLocaleDateString(), 
+            'DOB in Words': s.dobInWords || '',
             'Admission Date': new Date(s.admissionDate).toLocaleDateString()
         })); 
         const wb = XLSX.utils.book_new(); 
@@ -1065,6 +1240,12 @@
             const admNo = nextAdmNo.toString().padStart(4, '0');
             e('admNo').value = admNo;
             
+            // Get DOB in words
+            let dobInWords = e('dobInWords').value;
+            if (!dobInWords && e('dob').value) {
+                dobInWords = dateToWords(e('dob').value);
+            }
+            
             const data = {
                 admNo,
                 name: e('name').value,
@@ -1072,6 +1253,7 @@
                 fatherName: e('fatherName').value,
                 phone: e('phone').value,
                 dob: e('dob').value,
+                dobInWords: dobInWords,
                 admissionDate: e('admissionDate').value,
                 photo: e('studentPhoto').src || '',
                 createdAt: new Date().toISOString(),
@@ -1124,6 +1306,12 @@
         isSubmitting = true;
         
         try {
+            // Get DOB in words
+            let dobInWords = e('dobInWords').value;
+            if (!dobInWords && e('dob').value) {
+                dobInWords = dateToWords(e('dob').value);
+            }
+            
             // Prepare the updated data
             const updatedData = {
                 admNo: e('admNo').value,
@@ -1132,6 +1320,7 @@
                 fatherName: e('fatherName').value,
                 phone: e('phone').value,
                 dob: e('dob').value,
+                dobInWords: dobInWords,
                 admissionDate: e('admissionDate').value,
                 photo: e('studentPhoto').src || '',
                 updatedAt: new Date().toISOString()
