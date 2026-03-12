@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>GMHSS Pishin - Student Management</title>
+    <title>GMHSS Pishin - Login</title>
     <!-- Google Fonts for Noto Nastaliq Urdu -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"></script>
 
     <style>
@@ -178,6 +180,190 @@
             background: #2e7d32; 
             color: #ffffff; 
             box-shadow: 0 2px 8px rgba(46,125,50,0.3);
+        }
+        
+        /* Login Container */
+        .login-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .login-card {
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 30px rgba(0,80,0,0.1);
+            border: 2px solid #c8e6c9;
+        }
+        
+        .login-title {
+            color: #1b5e20;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-title i {
+            color: #2e7d32;
+            margin-right: 10px;
+        }
+        
+        .login-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .login-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1b5e20;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .login-form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e8f5e9;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f9fff9;
+        }
+        
+        .login-form-group input:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .login-btn-primary {
+            background: #2e7d32;
+            color: white;
+            box-shadow: 0 8px 18px -5px #2e7d32;
+        }
+        
+        .login-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -5px #1b5e20;
+        }
+        
+        .login-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #2e7d32;
+        }
+        
+        .login-footer a {
+            color: #1b5e20;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 12px;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid #ffcdd2;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid #a5d6a7;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .login-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .login-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #c8e6c9;
+            z-index: 1;
+        }
+        
+        .login-divider span {
+            background: white;
+            padding: 0 15px;
+            color: #2e7d32;
+            position: relative;
+            z-index: 2;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffebee;
+            border: 2px solid #ffcdd2;
+            color: #d32f2f;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+            z-index: 100;
+        }
+        
+        .logout-btn:hover {
+            background: #ffcdd2;
+        }
+        
+        .logout-btn i {
+            margin-right: 8px;
+        }
+        
+        .main-content {
+            display: none;
         }
         
         .stats-row { 
@@ -411,124 +597,180 @@
 </head>
 <body>
 <div class="mobile-container">
-    <!-- ===== HEADER ===== -->
-    <div class="header">
-        <div class="logo-container">
-            <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
-                 alt="School Logo" 
-                 class="logo-img"
-                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
-        </div>
-        <div class="header-text">
-            <!-- ONLY URDU NAME (AS REQUESTED) -->
-            <div class="school-name-urdu" id="schoolNameUrdu">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
-        </div>
-        <div class="estd-badge" id="estdBadge"> Since 1890 • پشین</div>
-    </div>
+    <!-- ===== LOGOUT BUTTON ===== -->
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span id="logoutText">Logout</span></button>
     
-    <!-- language switch -->
-    <div class="lang-switcher">
-        <button class="lang-btn active" id="btnEnglish"><i class="fas fa-globe"></i> English</button>
-        <button class="lang-btn" id="btnUrdu"><i class="fas fa-globe"></i> اردو</button>
-    </div>
-    
-    <!-- stats cards -->
-    <div class="stats-row">
-        <div class="stat-card">
-            <div class="stat-number" id="totalStudents">0</div>
-            <div class="stat-label" id="totalLabel">Total Students</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="totalClasses">0</div>
-            <div class="stat-label" id="classesLabel">Classes</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="todayAdded">0</div>
-            <div class="stat-label" id="todayLabel">Today</div>
-        </div>
-    </div>
-    
-    <!-- tab bar -->
-    <div class="tab-bar">
-        <button class="tab active" data-tab="add"><i class="fas fa-plus-circle"></i> <span class="tab-text" id="tabAddText">Add Student</span></button>
-        <button class="tab" data-tab="list"><i class="fas fa-list-alt"></i> <span class="tab-text" id="tabListText">Records</span></button>
-    </div>
-    
-    <!-- ADD PANEL -->
-    <div id="addPanel" class="panel active">
-        <div id="messageContainer"></div>
-        
-        <div class="photo-area">
-            <div class="photo-preview" id="photoPreview">
-                <i class="fas fa-user-graduate" id="userIcon"></i>
-                <img id="studentPhoto" class="hidden">
-            </div>
-            <div class="photo-options">
-                <button class="photo-btn camera-btn" id="cameraBtn"><i class="fas fa-camera"></i> Use Camera</button>
-                <button class="photo-btn gallery-btn" id="galleryBtn"><i class="fas fa-images"></i> Choose from Gallery</button>
-            </div>
-            <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
-            <input type="file" id="galleryInput" accept="image/*" hidden>
-        </div>
-        <div class="photo-hint" id="photoHint"><i class="fas fa-info-circle"></i> Photo will be cropped automatically</div>
-        
-        <form id="studentForm">
-            <input type="text" id="admNo" placeholder="Admission No" required class="form-group" readonly>
-            <div class="form-row">
-                <input type="text" id="name" placeholder="Student Name" required>
-                <select id="class" required>
-                    <option value="" id="selectClassOption">Select Class</option>
-                    <option value="Nursery">Nursery</option>
-                    <option value="KG">KG</option>
-                    <option value="1st">1st</option>
-                    <option value="2nd">2nd</option>
-                    <option value="3rd">3rd</option>
-                    <option value="4th">4th</option>
-                    <option value="5th">5th</option>
-                    <option value="6th">6th</option>
-                    <option value="7th">7th</option>
-                    <option value="8th">8th</option>
-                    <option value="9th">9th</option>
-                    <option value="10th">10th</option>
-                    <option value="11th">11th</option>
-                    <option value="12th">12th</option>
-                </select>
-            </div>
-            <input type="text" id="fatherName" placeholder="Father's Name" required class="form-group">
-            <input type="tel" id="phone" placeholder="Phone Number" required class="form-group">
-            <div class="form-row">
-                <input type="date" id="dob" required>
-                <input type="date" id="admissionDate" required> 
-            </div>
-            <!-- NEW FIELD: Date of Birth in Words (Read-only) -->
-            <input type="text" id="dobInWords" placeholder="Date of Birth in Words" readonly class="form-group" style="background-color: #f9fff9;">
+    <!-- ===== LOGIN SECTION ===== -->
+    <div id="loginSection" class="login-container">
+        <div class="login-card">
+            <div class="school-name-urdu" style="font-size: 1.8rem; margin-bottom: 20px;">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
             
-            <button type="submit" class="btn btn-primary" id="saveBtn"><i class="fas fa-save"></i> Save to Firebase</button>
-            <button type="button" class="btn btn-success hidden" id="updateBtn"><i class="fas fa-edit"></i> Update Record</button>
-        </form>
+            <!-- Language switcher for login page -->
+            <div class="lang-switcher" style="margin: 10px 0 20px;">
+                <button class="lang-btn active" id="loginBtnEnglish"><i class="fas fa-globe"></i> English</button>
+                <button class="lang-btn" id="loginBtnUrdu"><i class="fas fa-globe"></i> اردو</button>
+            </div>
+            
+            <h2 class="login-title" id="loginTitle"><i class="fas fa-lock"></i> <span id="loginTitleText">Login</span></h2>
+            
+            <div id="loginError" class="error-message"></div>
+            <div id="loginSuccess" class="success-message"></div>
+            
+            <form id="loginForm">
+                <div class="login-form-group">
+                    <label id="emailLabel" for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="login-form-group">
+                    <label id="passwordLabel" for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="login-btn login-btn-primary" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> <span id="loginBtnText">Login</span>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <a href="#" id="forgotPassword">Forgot Password?</a>
+            </div>
+            
+            <div class="login-divider">
+                <span id="orText">OR</span>
+            </div>
+            
+            <button class="login-btn login-btn-primary" id="guestLoginBtn" style="background: #004225;">
+                <i class="fas fa-user"></i> <span id="guestLoginText">Continue as Guest</span>
+            </button>
+            
+            <div class="login-footer" style="margin-top: 15px;">
+                <span id="noAccountText">Don't have an account?</span> <a href="#" id="contactAdmin">Contact Admin</a>
+            </div>
+        </div>
     </div>
     
-    <!-- LIST PANEL -->
-    <div id="listPanel" class="panel">
-        <div class="search-export">
-            <input type="text" id="searchInput" placeholder="🔍 Search students...">
-            <button class="btn btn-success" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Excel</button>
-        </div>
-        
-        <div class="class-filter-section">
-            <div class="class-filter-title">
-                <span><i class="fas fa-filter"></i> <span id="filterTitle">Filter by Class</span></span>
-                <button class="btn btn-info" id="clearFilterBtn" style="width: auto; padding: 6px 15px; margin: 0;"><i class="fas fa-times"></i> <span id="clearFilterText">Clear</span></button>
+    <!-- ===== MAIN CONTENT (PROTECTED) ===== -->
+    <div id="mainContent" class="main-content">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
+                     alt="School Logo" 
+                     class="logo-img"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
             </div>
-            <div class="class-filter-badges" id="classFilterBadges"></div>
+            <div class="header-text">
+                <!-- ONLY URDU NAME (AS REQUESTED) -->
+                <div class="school-name-urdu" id="schoolNameUrdu">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
+            </div>
+            <div class="estd-badge" id="estdBadge"> Since 1890 • پشین</div>
         </div>
         
-        <div class="class-stats" id="classStats"></div>
-        <div id="studentList"></div>
+        <!-- language switch -->
+        <div class="lang-switcher">
+            <button class="lang-btn active" id="btnEnglish"><i class="fas fa-globe"></i> English</button>
+            <button class="lang-btn" id="btnUrdu"><i class="fas fa-globe"></i> اردو</button>
+        </div>
+        
+        <!-- stats cards -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label" id="totalLabel">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalClasses">0</div>
+                <div class="stat-label" id="classesLabel">Classes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayAdded">0</div>
+                <div class="stat-label" id="todayLabel">Today</div>
+            </div>
+        </div>
+        
+        <!-- tab bar -->
+        <div class="tab-bar">
+            <button class="tab active" data-tab="add"><i class="fas fa-plus-circle"></i> <span class="tab-text" id="tabAddText">Add Student</span></button>
+            <button class="tab" data-tab="list"><i class="fas fa-list-alt"></i> <span class="tab-text" id="tabListText">Records</span></button>
+        </div>
+        
+        <!-- ADD PANEL -->
+        <div id="addPanel" class="panel active">
+            <div id="messageContainer"></div>
+            
+            <div class="photo-area">
+                <div class="photo-preview" id="photoPreview">
+                    <i class="fas fa-user-graduate" id="userIcon"></i>
+                    <img id="studentPhoto" class="hidden">
+                </div>
+                <div class="photo-options">
+                    <button class="photo-btn camera-btn" id="cameraBtn"><i class="fas fa-camera"></i> Use Camera</button>
+                    <button class="photo-btn gallery-btn" id="galleryBtn"><i class="fas fa-images"></i> Choose from Gallery</button>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+                <input type="file" id="galleryInput" accept="image/*" hidden>
+            </div>
+            <div class="photo-hint" id="photoHint"><i class="fas fa-info-circle"></i> Photo will be cropped automatically</div>
+            
+            <form id="studentForm">
+                <input type="text" id="admNo" placeholder="Admission No" required class="form-group" readonly>
+                <div class="form-row">
+                    <input type="text" id="name" placeholder="Student Name" required>
+                    <select id="class" required>
+                        <option value="" id="selectClassOption">Select Class</option>
+                        <option value="Nursery">Nursery</option>
+                        <option value="KG">KG</option>
+                        <option value="1st">1st</option>
+                        <option value="2nd">2nd</option>
+                        <option value="3rd">3rd</option>
+                        <option value="4th">4th</option>
+                        <option value="5th">5th</option>
+                        <option value="6th">6th</option>
+                        <option value="7th">7th</option>
+                        <option value="8th">8th</option>
+                        <option value="9th">9th</option>
+                        <option value="10th">10th</option>
+                        <option value="11th">11th</option>
+                        <option value="12th">12th</option>
+                    </select>
+                </div>
+                <input type="text" id="fatherName" placeholder="Father's Name" required class="form-group">
+                <input type="tel" id="phone" placeholder="Phone Number" required class="form-group">
+                <div class="form-row">
+                    <input type="date" id="dob" required>
+                    <input type="date" id="admissionDate" required> 
+                </div>
+                <!-- NEW FIELD: Date of Birth in Words (Read-only) -->
+                <input type="text" id="dobInWords" placeholder="Date of Birth in Words" readonly class="form-group" style="background-color: #f9fff9;">
+                
+                <button type="submit" class="btn btn-primary" id="saveBtn"><i class="fas fa-save"></i> Save to Firebase</button>
+                <button type="button" class="btn btn-success hidden" id="updateBtn"><i class="fas fa-edit"></i> Update Record</button>
+            </form>
+        </div>
+        
+        <!-- LIST PANEL -->
+        <div id="listPanel" class="panel">
+            <div class="search-export">
+                <input type="text" id="searchInput" placeholder="🔍 Search students...">
+                <button class="btn btn-success" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Excel</button>
+            </div>
+            
+            <div class="class-filter-section">
+                <div class="class-filter-title">
+                    <span><i class="fas fa-filter"></i> <span id="filterTitle">Filter by Class</span></span>
+                    <button class="btn btn-info" id="clearFilterBtn" style="width: auto; padding: 6px 15px; margin: 0;"><i class="fas fa-times"></i> <span id="clearFilterText">Clear</span></button>
+                </div>
+                <div class="class-filter-badges" id="classFilterBadges"></div>
+            </div>
+            
+            <div class="class-stats" id="classStats"></div>
+            <div id="studentList"></div>
+        </div>
     </div>
     
     <!-- BOTTOM NAV -->
-    <div class="bottom-nav">
+    <div class="bottom-nav" id="bottomNav" style="display: none;">
         <div class="nav-item active" data-nav="add"><i class="fas fa-home"></i><span class="nav-text" id="navHomeText">Home</span></div>
         <div class="nav-item" data-nav="list"><i class="fas fa-users"></i><span class="nav-text" id="navStudentsText">Students</span></div>
     </div>
@@ -571,6 +813,7 @@
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.database();
     const studentsRef = db.ref('students');
     const counterRef = db.ref('counter');
@@ -585,6 +828,7 @@
     let isSubmitting = false;
     let selectedClass = 'all';
     let cropper = null;
+    let currentUser = null;
 
     const classList = ['Nursery','KG','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th'];
 
@@ -630,7 +874,23 @@
             filterTitle:"Filter by Class", 
             allClasses:"All Classes", 
             noStudents:"No students found", 
-            clearFilter:"Clear" 
+            clearFilter:"Clear",
+            // Login translations
+            loginTitle:"Login",
+            emailLabel:"Email Address",
+            passwordLabel:"Password",
+            loginBtn:"Login",
+            forgotPassword:"Forgot Password?",
+            orText:"OR",
+            guestLogin:"Continue as Guest",
+            noAccount:"Don't have an account?",
+            contactAdmin:"Contact Admin",
+            logout:"Logout",
+            loginSuccess:"Login successful! Redirecting...",
+            loginError:"Invalid email or password",
+            guestMode:"Guest Mode - Limited Access",
+            emailRequired:"Please enter your email",
+            passwordRequired:"Please enter your password"
         },
         ur: { 
             schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
@@ -672,9 +932,246 @@
             filterTitle:"کلاس کے مطابق فلٹر کریں", 
             allClasses:"تمام کلاسیں", 
             noStudents:"کوئی طالب علم نہیں ملا", 
-            clearFilter:"صاف کریں" 
+            clearFilter:"صاف کریں",
+            // Login translations
+            loginTitle:"لاگ ان",
+            emailLabel:"ای میل ایڈریس",
+            passwordLabel:"پاس ورڈ",
+            loginBtn:"لاگ ان",
+            forgotPassword:"پاس ورڈ بھول گئے؟",
+            orText:"یا",
+            guestLogin:"بطور مہمان جاری رکھیں",
+            noAccount:"اکاؤنٹ نہیں ہے؟",
+            contactAdmin:"ایڈمن سے رابطہ کریں",
+            logout:"لاگ آؤٹ",
+            loginSuccess:"لاگ ان کامیاب! ری ڈائریکٹ ہو رہا ہے...",
+            loginError:"غلط ای میل یا پاس ورڈ",
+            guestMode:"مہمان موڈ - محدود رسائی",
+            emailRequired:"براہ کرم اپنا ای میل درج کریں",
+            passwordRequired:"براہ کرم اپنا پاس ورڈ درج کریں"
         }
     };
+
+    // ==================== AUTHENTICATION FUNCTIONS ====================
+    function showLogin() {
+        e('loginSection').style.display = 'flex';
+        e('mainContent').style.display = 'none';
+        e('bottomNav').style.display = 'none';
+        e('logoutBtn').style.display = 'none';
+    }
+    
+    function showMainContent(user) {
+        currentUser = user;
+        e('loginSection').style.display = 'none';
+        e('mainContent').style.display = 'block';
+        e('bottomNav').style.display = 'flex';
+        e('logoutBtn').style.display = 'block';
+        
+        // Initialize main content
+        initializeCounter();
+        loadNextAdmissionNumber();
+        setAutoAdmissionDate();
+        
+        // Show guest mode message if guest
+        if (user && user.isAnonymous) {
+            showMessage(translations[isUrdu ? 'ur' : 'en'].guestMode, true);
+        }
+    }
+    
+    // Check auth state
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // User is signed in
+            showMainContent(user);
+        } else {
+            // User is signed out
+            showLogin();
+        }
+    });
+    
+    // Login form submit
+    e('loginForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const email = e('email').value.trim();
+        const password = e('password').value;
+        const t = translations[isUrdu ? 'ur' : 'en'];
+        
+        // Validate
+        if (!email) {
+            showLoginError(t.emailRequired);
+            return;
+        }
+        if (!password) {
+            showLoginError(t.passwordRequired);
+            return;
+        }
+        
+        // Disable button
+        e('loginBtn').disabled = true;
+        e('loginBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.loginBtn}`;
+        
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+            showLoginSuccess(t.loginSuccess);
+        } catch (error) {
+            console.error('Login error:', error);
+            showLoginError(t.loginError);
+            e('loginBtn').disabled = false;
+            e('loginBtn').innerHTML = `<i class="fas fa-sign-in-alt"></i> ${t.loginBtn}`;
+        }
+    });
+    
+    // Guest login
+    e('guestLoginBtn').addEventListener('click', async () => {
+        const t = translations[isUrdu ? 'ur' : 'en'];
+        
+        e('guestLoginBtn').disabled = true;
+        e('guestLoginBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.guestLogin}`;
+        
+        try {
+            await auth.signInAnonymously();
+            showLoginSuccess(t.guestMode);
+        } catch (error) {
+            console.error('Guest login error:', error);
+            showLoginError('Guest login failed');
+            e('guestLoginBtn').disabled = false;
+            e('guestLoginBtn').innerHTML = `<i class="fas fa-user"></i> ${t.guestLogin}`;
+        }
+    });
+    
+    // Logout
+    e('logoutBtn').addEventListener('click', async () => {
+        try {
+            await auth.signOut();
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    });
+    
+    // Forgot password
+    e('forgotPassword').addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = prompt(isUrdu ? 'اپنا ای میل ایڈریس درج کریں:' : 'Enter your email address:');
+        if (email) {
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    alert(isUrdu ? 'پاس ورڈ ری سیٹ ای میل بھیج دیا گیا ہے' : 'Password reset email sent');
+                })
+                .catch((error) => {
+                    alert(isUrdu ? 'غلطی: ' + error.message : 'Error: ' + error.message);
+                });
+        }
+    });
+    
+    // Contact admin
+    e('contactAdmin').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert(isUrdu ? 'براہ کرم ایڈمن سے رابطہ کریں: admin@gmhss.edu.pk' : 'Please contact admin: admin@gmhss.edu.pk');
+    });
+    
+    function showLoginError(message) {
+        e('loginError').style.display = 'block';
+        e('loginError').textContent = message;
+        e('loginSuccess').style.display = 'none';
+    }
+    
+    function showLoginSuccess(message) {
+        e('loginSuccess').style.display = 'block';
+        e('loginSuccess').textContent = message;
+        e('loginError').style.display = 'none';
+    }
+
+    // ==================== LANGUAGE FUNCTIONS ====================
+    function setLanguage(lang) {
+        const t = translations[lang];
+        
+        // Update login page
+        if (e('loginTitleText')) e('loginTitleText').textContent = t.loginTitle;
+        if (e('emailLabel')) e('emailLabel').textContent = t.emailLabel;
+        if (e('passwordLabel')) e('passwordLabel').textContent = t.passwordLabel;
+        if (e('loginBtnText')) e('loginBtnText').textContent = t.loginBtn;
+        if (e('forgotPassword')) e('forgotPassword').textContent = t.forgotPassword;
+        if (e('orText')) e('orText').textContent = t.orText;
+        if (e('guestLoginText')) e('guestLoginText').textContent = t.guestLogin;
+        if (e('noAccountText')) e('noAccountText').textContent = t.noAccount;
+        if (e('contactAdmin')) e('contactAdmin').textContent = t.contactAdmin;
+        if (e('logoutText')) e('logoutText').textContent = t.logout;
+        
+        // Update main content
+        e('schoolNameUrdu').textContent = t.schoolName;
+        e('estdBadge').innerHTML = t.estd;
+        e('totalLabel').textContent = t.total; 
+        e('classesLabel').textContent = t.classes; 
+        e('todayLabel').textContent = t.today;
+        e('tabAddText').textContent = t.add; 
+        e('tabListText').textContent = t.records;
+        e('admNo').placeholder = t.admNo; 
+        e('name').placeholder = t.studentName; 
+        e('fatherName').placeholder = t.fatherName; 
+        e('phone').placeholder = t.phone;
+        e('dobInWords').placeholder = t.dobInWordsLabel;
+        e('saveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.save}`;
+        e('updateBtn').innerHTML = `<i class="fas fa-edit"></i> ${t.update}`;
+        e('searchInput').placeholder = t.search; 
+        e('navHomeText').textContent = t.home; 
+        e('navStudentsText').textContent = t.students;
+        e('photoHint').innerHTML = `<i class="fas fa-info-circle"></i> ${t.photoHint}`;
+        e('filterTitle').innerHTML = `<i class="fas fa-filter"></i> ${t.filterTitle}`;
+        e('clearFilterText').textContent = t.clearFilter;
+        
+        const selectClassOption = document.querySelector('#class option[value=""]');
+        if (selectClassOption) selectClassOption.textContent = t.selectClass;
+        
+        if (lang === 'ur') {
+            document.body.classList.add('urdu-mode');
+            document.body.classList.add('urdu-text');
+        } else {
+            document.body.classList.remove('urdu-mode');
+            document.body.classList.remove('urdu-text');
+        }
+        
+        renderClassFilter(); 
+        renderList();
+    }
+
+    // Language switch event listeners for login page
+    e('loginBtnEnglish').addEventListener('click', () => { 
+        isUrdu = false; 
+        setLanguage('en'); 
+        e('loginBtnEnglish').classList.add('active'); 
+        e('loginBtnUrdu').classList.remove('active'); 
+        e('btnEnglish').classList.add('active'); 
+        e('btnUrdu').classList.remove('active'); 
+    });
+    
+    e('loginBtnUrdu').addEventListener('click', () => { 
+        isUrdu = true; 
+        setLanguage('ur'); 
+        e('loginBtnUrdu').classList.add('active'); 
+        e('loginBtnEnglish').classList.remove('active'); 
+        e('btnUrdu').classList.add('active'); 
+        e('btnEnglish').classList.remove('active'); 
+    });
+
+    // Language switch event listeners for main content
+    e('btnEnglish').addEventListener('click', () => { 
+        isUrdu = false; 
+        setLanguage('en'); 
+        e('btnEnglish').classList.add('active'); 
+        e('btnUrdu').classList.remove('active'); 
+        e('loginBtnEnglish').classList.add('active'); 
+        e('loginBtnUrdu').classList.remove('active'); 
+    });
+    
+    e('btnUrdu').addEventListener('click', () => { 
+        isUrdu = true; 
+        setLanguage('ur'); 
+        e('btnUrdu').classList.add('active'); 
+        e('btnEnglish').classList.remove('active'); 
+        e('loginBtnUrdu').classList.add('active'); 
+        e('loginBtnEnglish').classList.remove('active'); 
+    });
 
     // ==================== DATE TO WORDS CONVERSION FUNCTIONS ====================
     function dateToWords(dateString) {
@@ -789,58 +1286,6 @@
             }
         }
     }
-
-    // ==================== LANGUAGE FUNCTIONS ====================
-    function setLanguage(lang) {
-        const t = translations[lang];
-        e('schoolNameUrdu').textContent = t.schoolName;
-        e('estdBadge').innerHTML = t.estd;
-        e('totalLabel').textContent = t.total; 
-        e('classesLabel').textContent = t.classes; 
-        e('todayLabel').textContent = t.today;
-        e('tabAddText').textContent = t.add; 
-        e('tabListText').textContent = t.records;
-        e('admNo').placeholder = t.admNo; 
-        e('name').placeholder = t.studentName; 
-        e('fatherName').placeholder = t.fatherName; 
-        e('phone').placeholder = t.phone;
-        e('dobInWords').placeholder = t.dobInWordsLabel;
-        e('saveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.save}`;
-        e('updateBtn').innerHTML = `<i class="fas fa-edit"></i> ${t.update}`;
-        e('searchInput').placeholder = t.search; 
-        e('navHomeText').textContent = t.home; 
-        e('navStudentsText').textContent = t.students;
-        e('photoHint').innerHTML = `<i class="fas fa-info-circle"></i> ${t.photoHint}`;
-        e('filterTitle').innerHTML = `<i class="fas fa-filter"></i> ${t.filterTitle}`;
-        e('clearFilterText').textContent = t.clearFilter;
-        document.querySelector('#class option[value=""]').textContent = t.selectClass;
-        
-        if (lang === 'ur') {
-            document.body.classList.add('urdu-mode');
-            document.body.classList.add('urdu-text');
-        } else {
-            document.body.classList.remove('urdu-mode');
-            document.body.classList.remove('urdu-text');
-        }
-        
-        renderClassFilter(); 
-        renderList();
-    }
-
-    // Language switch event listeners
-    e('btnEnglish').addEventListener('click', () => { 
-        isUrdu = false; 
-        setLanguage('en'); 
-        e('btnEnglish').classList.add('active'); 
-        e('btnUrdu').classList.remove('active'); 
-    });
-    
-    e('btnUrdu').addEventListener('click', () => { 
-        isUrdu = true; 
-        setLanguage('ur'); 
-        e('btnUrdu').classList.add('active'); 
-        e('btnEnglish').classList.remove('active'); 
-    });
 
     // ==================== DOB AUTO-CONVERSION ====================
     e('dob').addEventListener('change', function() {
@@ -1371,14 +1816,8 @@
         }; 
     });
 
-    // ==================== WINDOW ONLOAD ====================
-    window.onload = () => { 
-        initializeCounter(); 
-        setTimeout(() => { 
-            loadNextAdmissionNumber(); 
-            setAutoAdmissionDate(); 
-        }, 500); 
-    };
+    // Set default language
+    setLanguage('en');
 </script>
 </body>
 </html>
