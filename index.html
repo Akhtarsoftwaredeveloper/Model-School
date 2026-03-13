@@ -32,7 +32,6 @@
             justify-content: center;
         }
         
-        /* Jameel Noori Nastaleeq Font - Improved with multiple sources and fallbacks */
         @font-face {
             font-family: 'Jameel Noori Nastaleeq';
             src: url('https://fonts.jameelnoori.com/jameel-noori-nastaleeq.woff2') format('woff2'),
@@ -594,6 +593,13 @@
     
     <!-- ===== LOGIN SECTION ===== -->
     <div id="loginSection" class="login-container">
+        <div class="logo-container">
+                <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
+                     alt="School Logo" 
+                     class="logo-img"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
+            </div>
+        
         <div class="login-card">
             <div class="school-name-urdu" style="font-size: 1.8rem; margin-bottom: 20px;">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
             
@@ -809,13 +815,13 @@
     const studentsRef = db.ref('students');
     const counterRef = db.ref('counter'); // still kept but not used for admissionNo
 
-    // DOM Elements
+    // DOM Elements helper
     const e = (id) => document.getElementById(id);
     
     // Global Variables
     let students = [];
     let currentId = null;
-    let isUrdu = false;
+    let isUrdu = false;      // current language flag
     let isSubmitting = false;
     let selectedClass = 'all';
     let cropper = null;
@@ -960,16 +966,13 @@
         e('bottomNav').style.display = 'flex';
         e('logoutBtn').style.display = 'block';
         
-        // Initialize main content
         setAutoAdmissionDate();
         
-        // Show guest mode message if guest
         if (user && user.isAnonymous) {
             showMessage(translations[isUrdu ? 'ur' : 'en'].guestMode, true);
         }
     }
     
-    // Check auth state
     auth.onAuthStateChanged((user) => {
         if (user) {
             showMainContent(user);
@@ -978,7 +981,6 @@
         }
     });
     
-    // Login form submit
     e('loginForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         
@@ -1069,41 +1071,44 @@
     function setLanguage(lang) {
         const t = translations[lang];
         
-        e('loginTitleText').textContent = t.loginTitle;
-        e('emailLabel').textContent = t.emailLabel;
-        e('passwordLabel').textContent = t.passwordLabel;
-        e('loginBtnText').textContent = t.loginBtn;
-        e('forgotPassword').textContent = t.forgotPassword;
-        e('orText').textContent = t.orText;
-        e('guestLoginText').textContent = t.guestLogin;
-        e('noAccountText').textContent = t.noAccount;
-        e('contactAdmin').textContent = t.contactAdmin;
-        e('logoutText').textContent = t.logout;
+        // Update login page elements (safe check if they exist)
+        if (e('loginTitleText')) e('loginTitleText').textContent = t.loginTitle;
+        if (e('emailLabel')) e('emailLabel').textContent = t.emailLabel;
+        if (e('passwordLabel')) e('passwordLabel').textContent = t.passwordLabel;
+        if (e('loginBtnText')) e('loginBtnText').textContent = t.loginBtn;
+        if (e('forgotPassword')) e('forgotPassword').textContent = t.forgotPassword;
+        if (e('orText')) e('orText').textContent = t.orText;
+        if (e('guestLoginText')) e('guestLoginText').textContent = t.guestLogin;
+        if (e('noAccountText')) e('noAccountText').textContent = t.noAccount;
+        if (e('contactAdmin')) e('contactAdmin').textContent = t.contactAdmin;
+        if (e('logoutText')) e('logoutText').textContent = t.logout;
         
-        e('schoolNameUrdu').textContent = t.schoolName;
-        e('estdBadge').innerHTML = t.estd;
-        e('totalLabel').textContent = t.total; 
-        e('classesLabel').textContent = t.classes; 
-        e('todayLabel').textContent = t.today;
-        e('tabAddText').textContent = t.add; 
-        e('tabListText').textContent = t.records;
-        e('admNo').placeholder = t.admNo; 
-        e('name').placeholder = t.studentName; 
-        e('fatherName').placeholder = t.fatherName; 
-        e('phone').placeholder = t.phone;
-        e('dobInWords').placeholder = t.dobInWordsLabel;
-        e('saveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.save}`;
-        e('updateBtn').innerHTML = `<i class="fas fa-edit"></i> ${t.update}`;
-        e('searchInput').placeholder = t.search; 
-        e('navHomeText').textContent = t.home; 
-        e('navStudentsText').textContent = t.students;
-        e('photoHint').innerHTML = `<i class="fas fa-info-circle"></i> ${t.photoHint}`;
-        e('filterTitle').innerHTML = `<i class="fas fa-filter"></i> ${t.filterTitle}`;
-        e('clearFilterText').textContent = t.clearFilter;
+        // Update main content elements
+        if (e('schoolNameUrdu')) e('schoolNameUrdu').textContent = t.schoolName;
+        if (e('estdBadge')) e('estdBadge').innerHTML = t.estd;
+        if (e('totalLabel')) e('totalLabel').textContent = t.total;
+        if (e('classesLabel')) e('classesLabel').textContent = t.classes;
+        if (e('todayLabel')) e('todayLabel').textContent = t.today;
+        if (e('tabAddText')) e('tabAddText').textContent = t.add;
+        if (e('tabListText')) e('tabListText').textContent = t.records;
+        if (e('admNo')) e('admNo').placeholder = t.admNo;
+        if (e('name')) e('name').placeholder = t.studentName;
+        if (e('fatherName')) e('fatherName').placeholder = t.fatherName;
+        if (e('phone')) e('phone').placeholder = t.phone;
+        if (e('dobInWords')) e('dobInWords').placeholder = t.dobInWordsLabel;
+        if (e('saveBtn')) e('saveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.save}`;
+        if (e('updateBtn')) e('updateBtn').innerHTML = `<i class="fas fa-edit"></i> ${t.update}`;
+        if (e('searchInput')) e('searchInput').placeholder = t.search;
+        if (e('navHomeText')) e('navHomeText').textContent = t.home;
+        if (e('navStudentsText')) e('navStudentsText').textContent = t.students;
+        if (e('photoHint')) e('photoHint').innerHTML = `<i class="fas fa-info-circle"></i> ${t.photoHint}`;
+        if (e('filterTitle')) e('filterTitle').innerHTML = `<i class="fas fa-filter"></i> ${t.filterTitle}`;
+        if (e('clearFilterText')) e('clearFilterText').textContent = t.clearFilter;
         
         const selectClassOption = document.querySelector('#class option[value=""]');
         if (selectClassOption) selectClassOption.textContent = t.selectClass;
         
+        // Set body class for Urdu font
         if (lang === 'ur') {
             document.body.classList.add('urdu-mode');
             document.body.classList.add('urdu-text');
@@ -1112,10 +1117,12 @@
             document.body.classList.remove('urdu-text');
         }
         
+        // Re-render class filter and list to update any dynamic text
         renderClassFilter(); 
         renderList();
     }
 
+    // Language switch listeners for login page
     e('loginBtnEnglish').addEventListener('click', () => { 
         isUrdu = false; 
         setLanguage('en'); 
@@ -1134,6 +1141,7 @@
         e('btnEnglish').classList.remove('active'); 
     });
 
+    // Language switch listeners for main content
     e('btnEnglish').addEventListener('click', () => { 
         isUrdu = false; 
         setLanguage('en'); 
@@ -1604,7 +1612,6 @@
     e('studentForm').onsubmit = async (event) => {
         event.preventDefault();
         
-        // If this is an update, don't process here (update button handles it)
         if (currentId !== null) {
             return;
         }
@@ -1613,7 +1620,6 @@
         
         const t = translations[isUrdu ? 'ur' : 'en'];
         
-        // Validate form
         if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) {
             showMessage(t.fillAllFields, false);
             return;
@@ -1625,7 +1631,6 @@
             return;
         }
         
-        // Check duplicate admission number
         if (isDuplicateAdmissionNo(admNo)) {
             showMessage(t.duplicateAdmNo, false);
             return;
@@ -1691,7 +1696,6 @@
             return;
         }
         
-        // Check duplicate admission number (excluding current record)
         if (isDuplicateAdmissionNo(admNo, currentId)) {
             showMessage(t.duplicateAdmNo, false);
             return;
@@ -1751,7 +1755,6 @@
             btn.classList.add('active'); 
             
             if (tab === 'add') { 
-                // If no student is being edited, just set admission date (admission number is manual now)
                 if (currentId === null) {
                     setAutoAdmissionDate(); 
                 }
@@ -1759,7 +1762,7 @@
         }; 
     });
 
-    // Set default language
+    // Set default language to English
     setLanguage('en');
 </script>
 </body>
