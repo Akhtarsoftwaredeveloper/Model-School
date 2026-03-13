@@ -456,84 +456,6 @@
             font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif !important;
         }
         
-        /* Document sections */
-        .docs-section {
-            margin-top: 20px;
-            background: #f1f8e9;
-            padding: 15px;
-            border-radius: 24px;
-            border: 1px solid #c8e6c9;
-        }
-        .doc-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            background: #ffffff;
-            padding: 10px;
-            border-radius: 18px;
-            border: 1px solid #a5d6a7;
-        }
-        .doc-preview {
-            width: 50px;
-            height: 60px;
-            border-radius: 12px;
-            border: 1px dashed #2e7d32;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: #f9fff9;
-        }
-        .doc-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .doc-preview i {
-            font-size: 1.5rem;
-            color: #81c784;
-        }
-        .doc-options {
-            flex: 1;
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-        .doc-btn {
-            flex: 1;
-            padding: 8px;
-            border-radius: 16px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-        .doc-camera-btn {
-            background: #2e7d32;
-            color: white;
-        }
-        .doc-gallery-btn {
-            background: #ffffff;
-            color: #1b5e20;
-            border: 1px solid #a5d6a7;
-        }
-        .doc-clear-btn {
-            background: #ffebee;
-            color: #d32f2f;
-            border: 1px solid #ffcdd2;
-            flex: 0.3;
-        }
-        .doc-hint {
-            font-size: 0.7rem;
-            color: #2e7d32;
-            margin: 5px 0 10px;
-        }
-        
         .photo-area { 
             display: flex; 
             gap: 15px; 
@@ -620,8 +542,6 @@
         .action-btn.print { background: #2e7d32; color: white; }
         .action-btn.edit { background: #ffb300; color: #1f2a0e; }
         .action-btn.delete { background: #d32f2f; color: white; }
-        .action-btn.doc { background: #0288d1; color: white; } /* for document view */
-        .action-btn.view { background: #7b1fa2; color: white; } /* for view document */
         
         .bottom-nav { 
             background: #ffffff; padding: 12px 20px; display: flex; justify-content: space-around; 
@@ -657,12 +577,6 @@
         .certificate h2 { color: #1b5e20; border-bottom: 2px dashed #2e7d32; }
         .certificate .student-name { color: #1b5e20; }
         .close-modal { color: #2e7d32; }
-
-        /* Document view modal */
-        .doc-modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,30,0,0.9); display: none; justify-content: center; align-items: center; z-index: 4000; }
-        .doc-modal-content { background: #ffffff; padding: 20px; border-radius: 30px; max-width: 600px; width: 90%; max-height: 80vh; overflow: auto; text-align: center; border: 3px solid #2e7d32; }
-        .doc-modal-content img { max-width: 100%; max-height: 60vh; border-radius: 20px; margin-bottom: 15px; }
-        .doc-print-btn { background: #2e7d32; color: white; padding: 12px 25px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; margin: 5px; }
 
         .no-data { text-align: center; padding: 40px; color: #81c784; background: #f1f8e9; border-radius: 28px; }
         .success-message { background: #2e7d32; color: white; border-radius: 30px; padding: 14px; text-align: center; margin:10px 0; animation: slideIn 0.3s, fadeOut 3s forwards; }
@@ -790,57 +704,6 @@
             </div>
             <div class="photo-hint" id="photoHint"><i class="fas fa-info-circle"></i> Photo will be cropped automatically</div>
             
-            <!-- DOCUMENTS SECTION (B Form, CNIC, School Certificate) with camera & gallery for each -->
-            <div class="docs-section">
-                <div style="font-weight:700; color:#1b5e20; margin-bottom:10px;"><i class="fas fa-folder-open"></i> Documents</div>
-                
-                <!-- B Form -->
-                <div class="doc-item">
-                    <div class="doc-preview" id="bformPreview">
-                        <i class="fas fa-file-alt" id="bformIcon"></i>
-                        <img id="bformImage" class="hidden">
-                    </div>
-                    <div class="doc-options">
-                        <button class="doc-btn doc-camera-btn" id="bformCameraBtn"><i class="fas fa-camera"></i> Camera</button>
-                        <button class="doc-btn doc-gallery-btn" id="bformGalleryBtn"><i class="fas fa-images"></i> Gallery</button>
-                        <button class="doc-btn doc-clear-btn" id="bformClearBtn"><i class="fas fa-times"></i></button>
-                    </div>
-                    <input type="file" id="bformCameraInput" accept="image/*" capture="environment" hidden>
-                    <input type="file" id="bformGalleryInput" accept="image/*" hidden>
-                </div>
-                
-                <!-- CNIC -->
-                <div class="doc-item">
-                    <div class="doc-preview" id="cnicPreview">
-                        <i class="fas fa-id-card" id="cnicIcon"></i>
-                        <img id="cnicImage" class="hidden">
-                    </div>
-                    <div class="doc-options">
-                        <button class="doc-btn doc-camera-btn" id="cnicCameraBtn"><i class="fas fa-camera"></i> Camera</button>
-                        <button class="doc-btn doc-gallery-btn" id="cnicGalleryBtn"><i class="fas fa-images"></i> Gallery</button>
-                        <button class="doc-btn doc-clear-btn" id="cnicClearBtn"><i class="fas fa-times"></i></button>
-                    </div>
-                    <input type="file" id="cnicCameraInput" accept="image/*" capture="environment" hidden>
-                    <input type="file" id="cnicGalleryInput" accept="image/*" hidden>
-                </div>
-                
-                <!-- School Certificate -->
-                <div class="doc-item">
-                    <div class="doc-preview" id="schoolCertPreview">
-                        <i class="fas fa-certificate" id="schoolCertIcon"></i>
-                        <img id="schoolCertImage" class="hidden">
-                    </div>
-                    <div class="doc-options">
-                        <button class="doc-btn doc-camera-btn" id="schoolCertCameraBtn"><i class="fas fa-camera"></i> Camera</button>
-                        <button class="doc-btn doc-gallery-btn" id="schoolCertGalleryBtn"><i class="fas fa-images"></i> Gallery</button>
-                        <button class="doc-btn doc-clear-btn" id="schoolCertClearBtn"><i class="fas fa-times"></i></button>
-                    </div>
-                    <input type="file" id="schoolCertCameraInput" accept="image/*" capture="environment" hidden>
-                    <input type="file" id="schoolCertGalleryInput" accept="image/*" hidden>
-                </div>
-                <div class="doc-hint"><i class="fas fa-info-circle"></i> Upload images of documents (camera/gallery) - they will be cropped</div>
-            </div>
-            
             <form id="studentForm">
                 <!-- Admission No is now manual (readonly removed) -->
                 <input type="text" id="admNo" placeholder="Admission No" required class="form-group">
@@ -904,10 +767,10 @@
     </div>
 </div>
 
-<!-- Cropper Modal (reused for documents) -->
+<!-- Cropper Modal -->
 <div id="cropperModal" class="cropper-modal">
     <div class="cropper-container">
-        <h3 style="margin-bottom: 15px; text-align: center;" id="cropperTitle">Crop Document</h3>
+        <h3 style="margin-bottom: 15px; text-align: center;">Crop Photo</h3>
         <div class="cropper-box">
             <img id="cropperImage" src="">
         </div>
@@ -918,24 +781,12 @@
     </div>
 </div>
 
-<!-- Certificate Modal (for enrollment cert) -->
+<!-- Certificate Modal -->
 <div id="certificateModal" class="certificate-modal">
     <div class="certificate-content">
         <span class="close-modal" id="closeModal"><i class="fas fa-times"></i></span>
         <div id="certificateContent"></div>
         <button class="btn btn-primary" id="printCertificate"><i class="fas fa-print"></i> Print Certificate</button>
-    </div>
-</div>
-
-<!-- Document Viewer Modal (for full screen) -->
-<div id="docViewerModal" class="doc-modal">
-    <div class="doc-modal-content">
-        <h3 id="docViewerTitle" style="color:#1b5e20; margin-bottom:15px;">Document</h3>
-        <img id="docViewerImage" src="" alt="Document">
-        <div>
-            <button class="doc-print-btn" id="printDocBtn"><i class="fas fa-print"></i> Print</button>
-            <button class="doc-print-btn" id="closeDocBtn" style="background:#f5f5f5; color:#1b5e20;"><i class="fas fa-times"></i> Close</button>
-        </div>
     </div>
 </div>
 
@@ -969,7 +820,6 @@
     let selectedClass = 'all';
     let cropper = null;
     let currentUser = null;
-    let currentDocType = null; // for cropping: 'bform', 'cnic', 'schoolCert'
 
     const classList = ['کچی','پکی','دوئم','سوئم','چہارم','پنجم','ششم','ہفتم','ہشتم','نہم','دہم','فرسٹ ائیر','سیکنڈ ائیر'];
 
@@ -1032,14 +882,7 @@
             loginError:"Invalid email or password",
             guestMode:"Guest Mode - Limited Access",
             emailRequired:"Please enter your email",
-            passwordRequired:"Please enter your password",
-            // Document related
-            bform:"B-Form",
-            cnic:"CNIC",
-            schoolCert:"School Certificate",
-            viewDoc:"View",
-            printAll:"Print All Docs",
-            downloadPDF:"Download PDF"
+            passwordRequired:"Please enter your password"
         },
         ur: { 
             schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
@@ -1098,14 +941,7 @@
             loginError:"غلط ای میل یا پاس ورڈ",
             guestMode:"مہمان موڈ - محدود رسائی",
             emailRequired:"براہ کرم اپنا ای میل درج کریں",
-            passwordRequired:"براہ کرم اپنا پاس ورڈ درج کریں",
-            // Document related
-            bform:"بی فارم",
-            cnic:"شناختی کارڈ",
-            schoolCert:"سکول سرٹیفکیٹ",
-            viewDoc:"دیکھیں",
-            printAll:"تمام دستاویزات پرنٹ کریں",
-            downloadPDF:"پی ڈی ایف ڈاؤن لوڈ"
+            passwordRequired:"براہ کرم اپنا پاس ورڈ درج کریں"
         }
     };
 
@@ -1484,18 +1320,9 @@
     e('cropBtn').addEventListener('click', () => { 
         if (cropper) { 
             const canvas = cropper.getCroppedCanvas({ width: 300, height: 400 }); 
-            if (currentDocType) {
-                // For documents
-                e(currentDocType + 'Image').src = canvas.toDataURL('image/jpeg');
-                e(currentDocType + 'Image').classList.remove('hidden');
-                e(currentDocType + 'Icon').classList.add('hidden');
-                currentDocType = null;
-            } else {
-                // For student photo
-                e('studentPhoto').src = canvas.toDataURL('image/jpeg'); 
-                e('studentPhoto').classList.remove('hidden'); 
-                e('userIcon').classList.add('hidden'); 
-            }
+            e('studentPhoto').src = canvas.toDataURL('image/jpeg'); 
+            e('studentPhoto').classList.remove('hidden'); 
+            e('userIcon').classList.add('hidden'); 
             e('cropperModal').style.display = 'none'; 
             cropper.destroy(); 
             cropper = null; 
@@ -1508,85 +1335,7 @@
             cropper.destroy(); 
             cropper = null; 
         }
-        currentDocType = null;
     });
-
-    // ==================== DOCUMENT HANDLING ====================
-    // Generic function to setup document upload with cropping
-    function setupDocumentUpload(docType) {
-        const cameraBtn = e(docType + 'CameraBtn');
-        const galleryBtn = e(docType + 'GalleryBtn');
-        const cameraInput = e(docType + 'CameraInput');
-        const galleryInput = e(docType + 'GalleryInput');
-        const clearBtn = e(docType + 'ClearBtn');
-        const imgEl = e(docType + 'Image');
-        const iconEl = e(docType + 'Icon');
-
-        // Camera
-        cameraBtn.addEventListener('click', () => {
-            cameraInput.setAttribute('capture', 'environment');
-            cameraInput.click();
-        });
-        cameraInput.addEventListener('change', (ev) => {
-            const file = ev.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentDocType = docType;
-                    e('cropperTitle').innerText = 'Crop ' + docType.toUpperCase();
-                    showCropperForDoc(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-            ev.target.value = '';
-        });
-
-        // Gallery
-        galleryBtn.addEventListener('click', () => {
-            galleryInput.removeAttribute('capture');
-            galleryInput.click();
-        });
-        galleryInput.addEventListener('change', (ev) => {
-            const file = ev.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentDocType = docType;
-                    e('cropperTitle').innerText = 'Crop ' + docType.toUpperCase();
-                    showCropperForDoc(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-            ev.target.value = '';
-        });
-
-        // Clear button
-        clearBtn.addEventListener('click', () => {
-            imgEl.src = '';
-            imgEl.classList.add('hidden');
-            iconEl.classList.remove('hidden');
-        });
-    }
-
-    function showCropperForDoc(src) {
-        e('cropperModal').style.display = 'flex';
-        e('cropperImage').src = src;
-        if (cropper) cropper.destroy();
-        cropper = new Cropper(e('cropperImage'), {
-            aspectRatio: NaN, // free aspect ratio for documents
-            viewMode: 1,
-            dragMode: 'move',
-            autoCropArea: 1,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            background: false
-        });
-    }
-
-    // Setup all documents
-    setupDocumentUpload('bform');
-    setupDocumentUpload('cnic');
-    setupDocumentUpload('schoolCert');
 
     // ==================== FILTER FUNCTIONS ====================
     function getClassCounts() { 
@@ -1686,31 +1435,11 @@
         e('userIcon').classList.remove('hidden'); 
         e('studentPhoto').src = ''; 
         e('dobInWords').value = '';
-        // Clear document previews
-        ['bform','cnic','schoolCert'].forEach(doc => {
-            e(doc+'Image').src = '';
-            e(doc+'Image').classList.add('hidden');
-            e(doc+'Icon').classList.remove('hidden');
-        });
         currentId = null; 
         e('saveBtn').classList.remove('hidden'); 
         e('updateBtn').classList.add('hidden'); 
         setAutoAdmissionDate(); 
     }
-
-    // ==================== DOCUMENT VIEWER ====================
-    function showDocument(imgSrc, title) {
-        e('docViewerImage').src = imgSrc;
-        e('docViewerTitle').textContent = title;
-        e('docViewerModal').style.display = 'flex';
-    }
-    e('closeDocBtn').onclick = () => e('docViewerModal').style.display = 'none';
-    e('printDocBtn').onclick = () => {
-        const win = window.open('', '_blank');
-        win.document.write(`<html><head><title>Document</title></head><body style="text-align:center"><img src="${e('docViewerImage').src}" style="max-width:100%"></body></html>`);
-        win.document.close();
-        win.print();
-    };
 
     // ==================== CRUD FUNCTIONS ====================
     window.editStudent = (id) => { 
@@ -1727,7 +1456,6 @@
         e('admissionDate').value = s.admissionDate || ''; 
         e('dobInWords').value = s.dobInWords || dateToWords(s.dob) || '';
         
-        // Photo
         if (s.photo) { 
             e('studentPhoto').src = s.photo; 
             e('studentPhoto').classList.remove('hidden'); 
@@ -1736,20 +1464,6 @@
             e('studentPhoto').classList.add('hidden'); 
             e('userIcon').classList.remove('hidden'); 
         }
-        
-        // Documents
-        const docs = ['bform','cnic','schoolCert'];
-        docs.forEach(doc => {
-            if (s[doc]) {
-                e(doc+'Image').src = s[doc];
-                e(doc+'Image').classList.remove('hidden');
-                e(doc+'Icon').classList.add('hidden');
-            } else {
-                e(doc+'Image').src = '';
-                e(doc+'Image').classList.add('hidden');
-                e(doc+'Icon').classList.remove('hidden');
-            }
-        });
         
         e('saveBtn').classList.add('hidden'); 
         e('updateBtn').classList.remove('hidden'); 
@@ -1776,63 +1490,6 @@
     window.printStudent = (id) => { 
         const s = students.find(x => x.id === id); 
         if (s) generateCertificate(s); 
-    };
-    
-    // Print individual document
-    window.printDocument = (docType, id) => {
-        const s = students.find(x => x.id === id);
-        if (!s || !s[docType]) return;
-        const win = window.open('', '_blank');
-        win.document.write(`<html><head><title>${docType}</title></head><body style="text-align:center"><img src="${s[docType]}" style="max-width:100%"></body></html>`);
-        win.document.close();
-        win.print();
-    };
-
-    // View document full screen
-    window.viewDocument = (docType, id) => {
-        const s = students.find(x => x.id === id);
-        if (!s || !s[docType]) return;
-        showDocument(s[docType], docType.toUpperCase());
-    };
-
-    // Print all documents for a student
-    window.printAllDocuments = (id) => {
-        const s = students.find(x => x.id === id);
-        if (!s) return;
-        const docs = ['bform','cnic','schoolCert'].filter(d => s[d]);
-        if (docs.length === 0) {
-            alert('No documents to print');
-            return;
-        }
-        const win = window.open('', '_blank');
-        let content = '<html><head><title>All Documents</title></head><body>';
-        docs.forEach(d => {
-            content += `<img src="${s[d]}" style="max-width:100%; page-break-after: always;"><br>`;
-        });
-        content += '</body></html>';
-        win.document.write(content);
-        win.document.close();
-        win.print();
-    };
-
-    // Download all documents as PDF
-    window.downloadAllPDF = async (id) => {
-        const s = students.find(x => x.id === id);
-        if (!s) return;
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF();
-        const docs = ['bform','cnic','schoolCert'].filter(d => s[d]);
-        if (docs.length === 0) {
-            alert('No documents to download');
-            return;
-        }
-        for (let i = 0; i < docs.length; i++) {
-            if (i > 0) pdf.addPage();
-            const imgData = s[docs[i]];
-            // Calculate image dimensions to fit A4
-            pdf.addImage(imgData, 'JPEG', 10, 10, 190, 0); // width 190, height auto
-        }
-        pdf.save(`Documents_${s.admNo}.pdf`);
     };
     
     function generateCertificate(s) { 
@@ -1912,14 +1569,8 @@
             return; 
         } 
         
-        e('studentList').innerHTML = filtered.map(s => {
-            // Build document icons if present
-            let docIcons = '';
-            if (s.bform) docIcons += `<button class="action-btn doc" onclick="printDocument('bform','${s.id}')" title="Print B-Form"><i class="fas fa-print"></i></button><button class="action-btn view" onclick="viewDocument('bform','${s.id}')" title="View B-Form"><i class="fas fa-eye"></i></button>`;
-            if (s.cnic) docIcons += `<button class="action-btn doc" onclick="printDocument('cnic','${s.id}')" title="Print CNIC"><i class="fas fa-print"></i></button><button class="action-btn view" onclick="viewDocument('cnic','${s.id}')" title="View CNIC"><i class="fas fa-eye"></i></button>`;
-            if (s.schoolCert) docIcons += `<button class="action-btn doc" onclick="printDocument('schoolCert','${s.id}')" title="Print School Cert"><i class="fas fa-print"></i></button><button class="action-btn view" onclick="viewDocument('schoolCert','${s.id}')" title="View School Cert"><i class="fas fa-eye"></i></button>`;
-            
-            return `<div class="student-card">
+        e('studentList').innerHTML = filtered.map(s => 
+            `<div class="student-card">
                 <div class="student-avatar">
                     ${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-user-graduate fa-2x"></i>'}
                 </div>
@@ -1935,7 +1586,6 @@
                         <button class="action-btn print" onclick="printStudent('${s.id}')">
                             <i class="fas fa-print"></i> ${t.print}
                         </button>
-                        ${docIcons}
                         <button class="action-btn edit" onclick="editStudent('${s.id}')">
                             <i class="fas fa-edit"></i> ${t.edit}
                         </button>
@@ -1943,13 +1593,9 @@
                             <i class="fas fa-trash"></i> ${t.delete}
                         </button>
                     </div>
-                    <div style="margin-top:5px;">
-                        <button class="action-btn print" onclick="printAllDocuments('${s.id}')"><i class="fas fa-print"></i> ${t.printAll}</button>
-                        <button class="action-btn print" onclick="downloadAllPDF('${s.id}')"><i class="fas fa-file-pdf"></i> ${t.downloadPDF}</button>
-                    </div>
                 </div>
-            </div>`;
-        }).join(''); 
+            </div>`
+        ).join(''); 
     }
     
     e('searchInput').addEventListener('input', renderList);
@@ -1995,11 +1641,6 @@
                 dobInWords = dateToWords(e('dob').value);
             }
             
-            // Collect document images (base64)
-            const bform = e('bformImage').src && !e('bformImage').classList.contains('hidden') ? e('bformImage').src : '';
-            const cnic = e('cnicImage').src && !e('cnicImage').classList.contains('hidden') ? e('cnicImage').src : '';
-            const schoolCert = e('schoolCertImage').src && !e('schoolCertImage').classList.contains('hidden') ? e('schoolCertImage').src : '';
-            
             const data = {
                 admNo,
                 name: e('name').value,
@@ -2010,9 +1651,6 @@
                 dobInWords: dobInWords,
                 admissionDate: e('admissionDate').value,
                 photo: e('studentPhoto').src || '',
-                bform: bform,
-                cnic: cnic,
-                schoolCert: schoolCert,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
@@ -2071,10 +1709,6 @@
                 dobInWords = dateToWords(e('dob').value);
             }
             
-            const bform = e('bformImage').src && !e('bformImage').classList.contains('hidden') ? e('bformImage').src : '';
-            const cnic = e('cnicImage').src && !e('cnicImage').classList.contains('hidden') ? e('cnicImage').src : '';
-            const schoolCert = e('schoolCertImage').src && !e('schoolCertImage').classList.contains('hidden') ? e('schoolCertImage').src : '';
-            
             const updatedData = {
                 admNo,
                 name: e('name').value,
@@ -2085,9 +1719,6 @@
                 dobInWords: dobInWords,
                 admissionDate: e('admissionDate').value,
                 photo: e('studentPhoto').src || '',
-                bform: bform,
-                cnic: cnic,
-                schoolCert: schoolCert,
                 updatedAt: new Date().toISOString()
             };
             
@@ -2120,6 +1751,7 @@
             btn.classList.add('active'); 
             
             if (tab === 'add') { 
+                // If no student is being edited, just set admission date (admission number is manual now)
                 if (currentId === null) {
                     setAutoAdmissionDate(); 
                 }
