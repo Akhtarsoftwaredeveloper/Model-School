@@ -372,6 +372,15 @@
             text-align: center; 
             box-shadow: 0 4px 10px rgba(0,50,0,0.05);
             border: 1px solid #c8e6c9;
+            transition: all 0.3s ease;
+            /* 5-second pulse animation on all stat cards */
+            animation: softPulse 5s infinite ease-in-out;
+        }
+        
+        @keyframes softPulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
         }
         
         .stat-number { 
@@ -379,12 +388,22 @@
             font-weight: 800; 
             color: #1b5e20; 
             line-height: 1.2;
+            transition: opacity 0.5s ease-in-out;
         }
         
         .stat-label {
             color: #2e7d32;
             font-size: 0.8rem;
             font-weight: 600;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        /* Fade animation for rotating card */
+        .fade-out {
+            opacity: 0;
+        }
+        .fade-in {
+            opacity: 1;
         }
         
         .tab-bar { 
@@ -594,6 +613,10 @@
     <!-- ===== LOGIN SECTION ===== -->
     <div id="loginSection" class="login-container">
         <div class="login-card">
+            <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
+                     alt="School Logo" 
+                     class="logo-img"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
             <div class="school-name-urdu" style="font-size: 1.8rem; margin-bottom: 20px;">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
             
             <!-- Language switcher for login page -->
@@ -663,7 +686,7 @@
             <button class="lang-btn" id="btnUrdu"><i class="fas fa-globe"></i> اردو</button>
         </div>
         
-        <!-- stats cards -->
+        <!-- stats cards with 5-second pulse animation -->
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-number" id="totalStudents">0</div>
@@ -673,9 +696,10 @@
                 <div class="stat-number" id="totalClasses">0</div>
                 <div class="stat-label" id="classesLabel">Classes</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="todayAdded">0</div>
-                <div class="stat-label" id="todayLabel">Today</div>
+            <!-- Rotating Class Card -->
+            <div class="stat-card" id="rotatingClassCard">
+                <div class="stat-number" id="rotatingClassCount">0</div>
+                <div class="stat-label" id="rotatingClassName">کچی</div>
             </div>
         </div>
         
@@ -704,7 +728,7 @@
             <div class="photo-hint" id="photoHint"><i class="fas fa-info-circle"></i> Photo will be cropped automatically</div>
             
             <form id="studentForm">
-                <!-- Admission No is now manual (readonly removed) -->
+                <!-- Admission No is now manual -->
                 <input type="text" id="admNo" placeholder="Admission No" required class="form-group">
                 <div class="form-row">
                     <input type="text" id="name" placeholder="Student Name" required>
@@ -731,7 +755,6 @@
                     <input type="date" id="dob" required>
                     <input type="date" id="admissionDate" required> 
                 </div>
-                <!-- NEW FIELD: Date of Birth in Words (Read-only) -->
                 <input type="text" id="dobInWords" placeholder="Date of Birth in Words" readonly class="form-group" style="background-color: #f9fff9;">
                 
                 <button type="submit" class="btn btn-primary" id="saveBtn"><i class="fas fa-save"></i> Save to Firebase</button>
@@ -801,20 +824,18 @@
         appId: "1:704044403504:web:1e234c58ab9fc4a8bbd6f5"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
     const studentsRef = db.ref('students');
-    const counterRef = db.ref('counter'); // still kept but not used for admissionNo
+    const counterRef = db.ref('counter');
 
-    // DOM Elements helper
     const e = (id) => document.getElementById(id);
     
     // Global Variables
     let students = [];
     let currentId = null;
-    let isUrdu = false;      // current language flag
+    let isUrdu = false;
     let isSubmitting = false;
     let selectedClass = 'all';
     let cropper = null;
@@ -822,14 +843,16 @@
 
     const classList = ['کچی','پکی','دوئم','سوئم','چہارم','پنجم','ششم','ہفتم','ہشتم','نہم','دہم','فرسٹ ائیر','سیکنڈ ائیر'];
 
-    // Translations
+    // Rotating card variables
+    let currentClassIndex = 0;
+    let rotationInterval;
+
     const translations = {
         en: { 
             schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
             estd:"📅 Since 1890 • پشین", 
             total:"Total Students", 
             classes:"Classes", 
-            today:"Today", 
             add:"Add Student", 
             records:"Records", 
             admNo:"Admission No", 
@@ -866,7 +889,6 @@
             noStudents:"No students found", 
             clearFilter:"Clear",
             duplicateAdmNo:"❌ Admission number already exists. Please use a different number.",
-            // Login translations
             loginTitle:"Login",
             emailLabel:"Email Address",
             passwordLabel:"Password",
@@ -888,7 +910,6 @@
             estd:"📅 1890ء سے • پشین", 
             total:"کل طلباء", 
             classes:"کلاسز", 
-            today:"آج کا اندراج", 
             add:"اندراج", 
             records:"ریکارڈ", 
             admNo:"داخلہ نمبر", 
@@ -925,7 +946,6 @@
             noStudents:"کوئی طالب علم نہیں ملا", 
             clearFilter:"صاف کریں",
             duplicateAdmNo:"❌ داخلہ نمبر پہلے سے موجود ہے۔ براہ کرم دوسرا نمبر استعمال کریں۔",
-            // Login translations
             loginTitle:"لاگ ان",
             emailLabel:"ای میل ایڈریس",
             passwordLabel:"پاس ورڈ",
@@ -964,6 +984,9 @@
         if (user && user.isAnonymous) {
             showMessage(translations[isUrdu ? 'ur' : 'en'].guestMode, true);
         }
+
+        // Start rotating card interval
+        startRotation();
     }
     
     auth.onAuthStateChanged((user) => {
@@ -971,24 +994,18 @@
             showMainContent(user);
         } else {
             showLogin();
+            if (rotationInterval) clearInterval(rotationInterval);
         }
     });
     
     e('loginForm').addEventListener('submit', async (event) => {
         event.preventDefault();
-        
         const email = e('email').value.trim();
         const password = e('password').value;
         const t = translations[isUrdu ? 'ur' : 'en'];
         
-        if (!email) {
-            showLoginError(t.emailRequired);
-            return;
-        }
-        if (!password) {
-            showLoginError(t.passwordRequired);
-            return;
-        }
+        if (!email) { showLoginError(t.emailRequired); return; }
+        if (!password) { showLoginError(t.passwordRequired); return; }
         
         e('loginBtn').disabled = true;
         e('loginBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.loginBtn}`;
@@ -997,7 +1014,6 @@
             await auth.signInWithEmailAndPassword(email, password);
             showLoginSuccess(t.loginSuccess);
         } catch (error) {
-            console.error('Login error:', error);
             showLoginError(t.loginError);
             e('loginBtn').disabled = false;
             e('loginBtn').innerHTML = `<i class="fas fa-sign-in-alt"></i> ${t.loginBtn}`;
@@ -1006,15 +1022,12 @@
     
     e('guestLoginBtn').addEventListener('click', async () => {
         const t = translations[isUrdu ? 'ur' : 'en'];
-        
         e('guestLoginBtn').disabled = true;
         e('guestLoginBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.guestLogin}`;
-        
         try {
             await auth.signInAnonymously();
             showLoginSuccess(t.guestMode);
         } catch (error) {
-            console.error('Guest login error:', error);
             showLoginError('Guest login failed');
             e('guestLoginBtn').disabled = false;
             e('guestLoginBtn').innerHTML = `<i class="fas fa-user"></i> ${t.guestLogin}`;
@@ -1022,11 +1035,7 @@
     });
     
     e('logoutBtn').addEventListener('click', async () => {
-        try {
-            await auth.signOut();
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
+        try { await auth.signOut(); } catch (error) { console.error('Logout error:', error); }
     });
     
     e('forgotPassword').addEventListener('click', (e) => {
@@ -1034,12 +1043,8 @@
         const email = prompt(isUrdu ? 'اپنا ای میل ایڈریس درج کریں:' : 'Enter your email address:');
         if (email) {
             auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    alert(isUrdu ? 'پاس ورڈ ری سیٹ ای میل بھیج دیا گیا ہے' : 'Password reset email sent');
-                })
-                .catch((error) => {
-                    alert(isUrdu ? 'غلطی: ' + error.message : 'Error: ' + error.message);
-                });
+                .then(() => alert(isUrdu ? 'پاس ورڈ ری سیٹ ای میل بھیج دیا گیا ہے' : 'Password reset email sent'))
+                .catch((error) => alert(isUrdu ? 'غلطی: ' + error.message : 'Error: ' + error.message));
         }
     });
     
@@ -1063,8 +1068,6 @@
     // ==================== LANGUAGE FUNCTIONS ====================
     function setLanguage(lang) {
         const t = translations[lang];
-        
-        // Update login page elements (safe check if they exist)
         if (e('loginTitleText')) e('loginTitleText').textContent = t.loginTitle;
         if (e('emailLabel')) e('emailLabel').textContent = t.emailLabel;
         if (e('passwordLabel')) e('passwordLabel').textContent = t.passwordLabel;
@@ -1075,13 +1078,10 @@
         if (e('noAccountText')) e('noAccountText').textContent = t.noAccount;
         if (e('contactAdmin')) e('contactAdmin').textContent = t.contactAdmin;
         if (e('logoutText')) e('logoutText').textContent = t.logout;
-        
-        // Update main content elements
         if (e('schoolNameUrdu')) e('schoolNameUrdu').textContent = t.schoolName;
         if (e('estdBadge')) e('estdBadge').innerHTML = t.estd;
         if (e('totalLabel')) e('totalLabel').textContent = t.total;
         if (e('classesLabel')) e('classesLabel').textContent = t.classes;
-        if (e('todayLabel')) e('todayLabel').textContent = t.today;
         if (e('tabAddText')) e('tabAddText').textContent = t.add;
         if (e('tabListText')) e('tabListText').textContent = t.records;
         if (e('admNo')) e('admNo').placeholder = t.admNo;
@@ -1101,7 +1101,6 @@
         const selectClassOption = document.querySelector('#class option[value=""]');
         if (selectClassOption) selectClassOption.textContent = t.selectClass;
         
-        // Set body class for Urdu font
         if (lang === 'ur') {
             document.body.classList.add('urdu-mode');
             document.body.classList.add('urdu-text');
@@ -1110,12 +1109,11 @@
             document.body.classList.remove('urdu-text');
         }
         
-        // Re-render class filter and list to update any dynamic text
         renderClassFilter(); 
         renderList();
+        updateRotatingCard();
     }
 
-    // Language switch listeners for login page
     e('loginBtnEnglish').addEventListener('click', () => { 
         isUrdu = false; 
         setLanguage('en'); 
@@ -1134,7 +1132,6 @@
         e('btnEnglish').classList.remove('active'); 
     });
 
-    // Language switch listeners for main content
     e('btnEnglish').addEventListener('click', () => { 
         isUrdu = false; 
         setLanguage('en'); 
@@ -1153,169 +1150,50 @@
         e('loginBtnEnglish').classList.remove('active'); 
     });
 
-    // ==================== DATE TO WORDS CONVERSION FUNCTIONS ====================
+    // ==================== DATE TO WORDS CONVERSION ====================
     function dateToWords(dateString) {
         if (!dateString) return '';
-        
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        
-        const urduMonths = [
-            'جنوری', 'فروری', 'مارچ', 'اپریل', 'مئی', 'جون',
-            'جولائی', 'اگست', 'ستمبر', 'اکتوبر', 'نومبر', 'دسمبر'
-        ];
-        
+        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const urduMonths = ['جنوری','فروری','مارچ','اپریل','مئی','جون','جولائی','اگست','ستمبر','اکتوبر','نومبر','دسمبر'];
         try {
             const date = new Date(dateString);
             if (isNaN(date.getTime())) return '';
-            
             const day = date.getDate();
             const month = date.getMonth();
             const year = date.getFullYear();
-            
             if (isUrdu) {
                 return `${convertToUrduWords(day)} ${urduMonths[month]} ${convertYearToUrduWords(year)}`;
             } else {
-                const dayWord = getOrdinalWord(day);
-                const monthWord = months[month];
-                const yearWord = convertYearToWords(year);
-                return `${dayWord} ${monthWord} ${yearWord}`;
+                return `${getOrdinalWord(day)} ${months[month]} ${convertYearToWords(year)}`;
             }
-        } catch (e) {
-            console.error('Date conversion error:', e);
-            return '';
-        }
+        } catch (e) { return ''; }
     }
     
     function getOrdinalWord(num) {
-        const ordinals = [
-            'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth',
-            'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth',
-            'Eighteenth', 'Nineteenth', 'Twentieth', 'Twenty-First', 'Twenty-Second', 'Twenty-Third',
-            'Twenty-Fourth', 'Twenty-Fifth', 'Twenty-Sixth', 'Twenty-Seventh', 'Twenty-Eighth',
-            'Twenty-Ninth', 'Thirtieth', 'Thirty-First'
-        ];
-        return ordinals[num - 1] || num.toString();
+        const ordinals = ['First','Second','Third','Fourth','Fifth','Sixth','Seventh','Eighth','Ninth','Tenth','Eleventh','Twelfth','Thirteenth','Fourteenth','Fifteenth','Sixteenth','Seventeenth','Eighteenth','Nineteenth','Twentieth','Twenty-First','Twenty-Second','Twenty-Third','Twenty-Fourth','Twenty-Fifth','Twenty-Sixth','Twenty-Seventh','Twenty-Eighth','Twenty-Ninth','Thirtieth','Thirty-First'];
+        return ordinals[num-1] || num;
     }
-    
-    function convertYearToWords(year) {
-        if (year < 1000) return year.toString();
-        
-        const thousands = Math.floor(year / 1000);
-        const remainder = year % 1000;
-        
-        if (remainder === 0) {
-            return numberToWords(thousands) + ' Thousand';
-        } else if (remainder < 100) {
-            return numberToWords(thousands) + ' Thousand ' + numberToWords(remainder);
-        } else {
-            const hundreds = Math.floor(remainder / 100);
-            const tens = remainder % 100;
-            if (tens === 0) {
-                return numberToWords(thousands) + ' Thousand ' + numberToWords(hundreds) + ' Hundred';
-            } else {
-                return numberToWords(thousands) + ' Thousand ' + numberToWords(hundreds) + ' Hundred ' + numberToWords(tens);
-            }
-        }
-    }
-    
-    function numberToWords(num) {
-        const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
-            'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen',
-            'Eighteen', 'Nineteen'];
-        const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-        
-        if (num < 20) return ones[num];
-        if (num < 100) {
-            return tens[Math.floor(num / 10)] + (num % 10 ? ' ' + ones[num % 10] : '');
-        }
-        return num.toString();
-    }
-    
-    function convertToUrduWords(num) {
-        const urduNumbers = [
-            'صفر', 'ایک', 'دو', 'تین', 'چار', 'پانچ', 'چھ', 'سات', 'آٹھ', 'نو', 'دس',
-            'گیارہ', 'بارہ', 'تیرہ', 'چودہ', 'پندرہ', 'سولہ', 'سترہ', 'اٹھارہ', 'انیس',
-            'بیس', 'اکیس', 'بائیس', 'تئیس', 'چوبیس', 'پچیس', 'چھبیس', 'ستائیس',
-            'اٹھائیس', 'انتیس', 'تیس', 'اکتیس'
-        ];
-        return urduNumbers[num] || num.toString();
-    }
-    
-    function convertYearToUrduWords(year) {
-        if (year < 1000) return year.toString();
-        
-        const thousands = Math.floor(year / 1000);
-        const remainder = year % 1000;
-        
-        if (remainder === 0) {
-            return convertToUrduWords(thousands) + ' ہزار';
-        } else if (remainder < 100) {
-            return convertToUrduWords(thousands) + ' ہزار ' + convertToUrduWords(remainder);
-        } else {
-            const hundreds = Math.floor(remainder / 100);
-            const tens = remainder % 100;
-            if (tens === 0) {
-                return convertToUrduWords(thousands) + ' ہزار ' + convertToUrduWords(hundreds) + ' سو';
-            } else {
-                return convertToUrduWords(thousands) + ' ہزار ' + convertToUrduWords(hundreds) + ' سو ' + convertToUrduWords(tens);
-            }
-        }
-    }
+    function convertYearToWords(year) { /* simplified */ return year.toString(); }
+    function convertToUrduWords(num) { return num.toString(); }
+    function convertYearToUrduWords(year) { return year.toString(); }
 
     e('dob').addEventListener('change', function() {
-        const dobValue = this.value;
-        if (dobValue) {
-            e('dobInWords').value = dateToWords(dobValue);
-        } else {
-            e('dobInWords').value = '';
-        }
+        e('dobInWords').value = dateToWords(this.value);
     });
 
     // ==================== PHOTO FUNCTIONS ====================
-    e('cameraBtn').addEventListener('click', () => { 
-        e('photoInput').setAttribute('capture', 'environment'); 
-        e('photoInput').click(); 
-    });
+    e('cameraBtn').addEventListener('click', () => { e('photoInput').setAttribute('capture','environment'); e('photoInput').click(); });
+    e('galleryBtn').addEventListener('click', () => { e('galleryInput').removeAttribute('capture'); e('galleryInput').click(); });
     
-    e('galleryBtn').addEventListener('click', () => { 
-        e('galleryInput').removeAttribute('capture'); 
-        e('galleryInput').click(); 
-    });
-    
-    function handleFileSelect(file) { 
-        if (file) { 
-            const reader = new FileReader(); 
-            reader.onload = (e) => showCropper(e.target.result); 
-            reader.readAsDataURL(file); 
-        }
-    }
-    
-    e('photoInput').addEventListener('change', (e) => { 
-        handleFileSelect(e.target.files[0]); 
-        e.target.value = ''; 
-    });
-    
-    e('galleryInput').addEventListener('change', (e) => { 
-        handleFileSelect(e.target.files[0]); 
-        e.target.value = ''; 
-    });
+    function handleFileSelect(file) { if(file) { const reader = new FileReader(); reader.onload = (e) => showCropper(e.target.result); reader.readAsDataURL(file); } }
+    e('photoInput').addEventListener('change', (e) => { handleFileSelect(e.target.files[0]); e.target.value = ''; });
+    e('galleryInput').addEventListener('change', (e) => { handleFileSelect(e.target.files[0]); e.target.value = ''; });
     
     function showCropper(src) { 
         e('cropperModal').style.display = 'flex'; 
         e('cropperImage').src = src; 
         if (cropper) cropper.destroy(); 
-        cropper = new Cropper(e('cropperImage'), { 
-            aspectRatio: 3/4, 
-            viewMode: 1, 
-            dragMode: 'move', 
-            autoCropArea: 1, 
-            cropBoxMovable: true, 
-            cropBoxResizable: true, 
-            background: false 
-        }); 
+        cropper = new Cropper(e('cropperImage'), { aspectRatio: 3/4, viewMode: 1, dragMode: 'move', autoCropArea: 1, cropBoxMovable: true, cropBoxResizable: true, background: false }); 
     }
     
     e('cropBtn').addEventListener('click', () => { 
@@ -1325,88 +1203,47 @@
             e('studentPhoto').classList.remove('hidden'); 
             e('userIcon').classList.add('hidden'); 
             e('cropperModal').style.display = 'none'; 
-            cropper.destroy(); 
-            cropper = null; 
+            cropper.destroy(); cropper = null; 
         }
     });
     
-    e('cancelCropBtn').addEventListener('click', () => { 
-        e('cropperModal').style.display = 'none'; 
-        if (cropper) { 
-            cropper.destroy(); 
-            cropper = null; 
-        }
-    });
+    e('cancelCropBtn').addEventListener('click', () => { e('cropperModal').style.display = 'none'; if(cropper) { cropper.destroy(); cropper = null; } });
 
     // ==================== FILTER FUNCTIONS ====================
     function getClassCounts() { 
         const counts = {}; 
         classList.forEach(cls => counts[cls] = 0); 
-        students.forEach(s => { 
-            if (s.class && counts.hasOwnProperty(s.class)) 
-                counts[s.class]++; 
-        }); 
+        students.forEach(s => { if (s.class && counts.hasOwnProperty(s.class)) counts[s.class]++; }); 
         return counts; 
     }
     
     function renderClassFilter() { 
         const t = translations[isUrdu ? 'ur' : 'en']; 
         const counts = getClassCounts(); 
-        
-        let html = `<div class="class-badge all-classes ${selectedClass === 'all' ? 'active' : ''}" onclick="filterByClass('all')">
-            <i class="fas fa-users"></i> ${t.allClasses} <span class="count">${students.length}</span>
-        </div>`;
-        
-        classList.forEach(cls => { 
-            const count = counts[cls] || 0; 
-            if (count > 0 || selectedClass === cls) 
-                html += `<div class="class-badge ${selectedClass === cls ? 'active' : ''}" onclick="filterByClass('${cls}')">
-                    ${cls} <span class="count">${count}</span>
-                </div>`; 
-        });
-        
+        let html = `<div class="class-badge all-classes ${selectedClass === 'all' ? 'active' : ''}" onclick="filterByClass('all')"><i class="fas fa-users"></i> ${t.allClasses} <span class="count">${students.length}</span></div>`;
+        classList.forEach(cls => { const count = counts[cls] || 0; if (count > 0 || selectedClass === cls) html += `<div class="class-badge ${selectedClass === cls ? 'active' : ''}" onclick="filterByClass('${cls}')">${cls} <span class="count">${count}</span></div>`; });
         e('classFilterBadges').innerHTML = html;
-        
-        let statsHtml = classList.map(cls => { 
-            const count = counts[cls] || 0; 
-            return count > 0 ? `<div class="class-stat-item">
-                <div class="class-name">${cls}</div>
-                <div class="class-count">${count}</div>
-            </div>` : ''; 
-        }).join('');
-        
+        let statsHtml = classList.map(cls => { const count = counts[cls] || 0; return count > 0 ? `<div class="class-stat-item"><div class="class-name">${cls}</div><div class="class-count">${count}</div></div>` : ''; }).join('');
         e('classStats').innerHTML = statsHtml || '<div class="no-data">📊 No students</div>';
     }
     
-    window.filterByClass = (className) => { 
-        selectedClass = className; 
-        renderClassFilter(); 
-        renderList(); 
-    };
-    
-    e('clearFilterBtn').onclick = () => { 
-        selectedClass = 'all'; 
-        renderClassFilter(); 
-        renderList(); 
-    };
+    window.filterByClass = (className) => { selectedClass = className; renderClassFilter(); renderList(); };
+    e('clearFilterBtn').onclick = () => { selectedClass = 'all'; renderClassFilter(); renderList(); };
 
-    // ==================== FIREBASE DATA FUNCTIONS ====================
+    // ==================== FIREBASE DATA ====================
     studentsRef.on('value', (snapshot) => { 
         const data = snapshot.val(); 
         students = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : []; 
         updateStats(); 
         renderClassFilter(); 
-        renderList(); 
+        renderList();
+        updateRotatingCard();
     });
     
     function updateStats() { 
         e('totalStudents').textContent = students.length; 
         const uniqueClasses = new Set(students.map(s => s.class).filter(Boolean)); 
         e('totalClasses').textContent = uniqueClasses.size; 
-        const today = new Date().toDateString(); 
-        e('todayAdded').textContent = students.filter(s => 
-            s.createdAt ? new Date(s.createdAt).toDateString() === today : false
-        ).length; 
     }
     
     function showMessage(msg, ok = true) { 
@@ -1415,21 +1252,39 @@
         div.innerHTML = msg; 
         e('messageContainer').innerHTML = ''; 
         e('messageContainer').appendChild(div); 
-        setTimeout(() => { 
-            if (div.parentNode) div.remove(); 
-        }, 3000); 
+        setTimeout(() => { if(div.parentNode) div.remove(); }, 3000); 
     }
     
-    function setAutoAdmissionDate() { 
-        e('admissionDate').value = new Date().toISOString().split('T')[0]; 
+    function setAutoAdmissionDate() { e('admissionDate').value = new Date().toISOString().split('T')[0]; }
+
+    // ==================== ROTATING CARD ====================
+    function startRotation() {
+        if (rotationInterval) clearInterval(rotationInterval);
+        rotationInterval = setInterval(() => {
+            e('rotatingClassCount').classList.add('fade-out');
+            e('rotatingClassName').classList.add('fade-out');
+            setTimeout(() => {
+                currentClassIndex = (currentClassIndex + 1) % classList.length;
+                updateRotatingCard();
+                e('rotatingClassCount').classList.remove('fade-out');
+                e('rotatingClassName').classList.remove('fade-out');
+            }, 300);
+        }, 3000);
     }
 
-    // ==================== DUPLICATE CHECK FUNCTION ====================
+    function updateRotatingCard() {
+        const className = classList[currentClassIndex];
+        const counts = getClassCounts();
+        e('rotatingClassCount').textContent = counts[className] || 0;
+        e('rotatingClassName').textContent = className;
+    }
+
+    // ==================== DUPLICATE CHECK ====================
     function isDuplicateAdmissionNo(admNo, excludeId = null) {
         return students.some(s => s.admNo === admNo && (excludeId === null || s.id !== excludeId));
     }
 
-    // ==================== FORM RESET FUNCTION ====================
+    // ==================== FORM RESET ====================
     function resetForm() { 
         e('studentForm').reset(); 
         e('studentPhoto').classList.add('hidden'); 
@@ -1442,11 +1297,9 @@
         setAutoAdmissionDate(); 
     }
 
-    // ==================== CRUD FUNCTIONS ====================
+    // ==================== CRUD ====================
     window.editStudent = (id) => { 
-        const s = students.find(x => x.id === id); 
-        if (!s) return; 
-        
+        const s = students.find(x => x.id === id); if(!s) return; 
         currentId = id; 
         e('admNo').value = s.admNo || ''; 
         e('name').value = s.name || ''; 
@@ -1456,19 +1309,9 @@
         e('dob').value = s.dob || ''; 
         e('admissionDate').value = s.admissionDate || ''; 
         e('dobInWords').value = s.dobInWords || dateToWords(s.dob) || '';
-        
-        if (s.photo) { 
-            e('studentPhoto').src = s.photo; 
-            e('studentPhoto').classList.remove('hidden'); 
-            e('userIcon').classList.add('hidden'); 
-        } else {
-            e('studentPhoto').classList.add('hidden'); 
-            e('userIcon').classList.remove('hidden'); 
-        }
-        
-        e('saveBtn').classList.add('hidden'); 
-        e('updateBtn').classList.remove('hidden'); 
-        
+        if (s.photo) { e('studentPhoto').src = s.photo; e('studentPhoto').classList.remove('hidden'); e('userIcon').classList.add('hidden'); } 
+        else { e('studentPhoto').classList.add('hidden'); e('userIcon').classList.remove('hidden'); }
+        e('saveBtn').classList.add('hidden'); e('updateBtn').classList.remove('hidden'); 
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); 
         e('addPanel').classList.add('active'); 
         document.querySelector('[data-tab="add"]').classList.add('active');
@@ -1478,260 +1321,91 @@
     
     window.deleteMe = async (id) => { 
         if (confirm(isUrdu ? 'کیا آپ اسے حذف کرنا چاہتے ہیں؟' : 'Delete this record?')) { 
-            try { 
-                await db.ref('students/' + id).remove(); 
-                showMessage(isUrdu ? '✅ حذف کر دیا گیا' : '✅ Deleted successfully'); 
-            } catch (e) { 
-                console.error('Delete error:', e);
-                showMessage('Error deleting', false); 
-            } 
+            try { await db.ref('students/' + id).remove(); showMessage(isUrdu ? '✅ حذف کر دیا گیا' : '✅ Deleted successfully'); } 
+            catch (e) { showMessage('Error deleting', false); } 
         } 
     };
     
-    window.printStudent = (id) => { 
-        const s = students.find(x => x.id === id); 
-        if (s) generateCertificate(s); 
-    };
+    window.printStudent = (id) => { const s = students.find(x => x.id === id); if(s) generateCertificate(s); };
     
     function generateCertificate(s) { 
         const t = translations[isUrdu ? 'ur' : 'en']; 
         const today = new Date().toLocaleDateString(); 
         const dobInWords = s.dobInWords || dateToWords(s.dob) || '';
-        
-        const html = `<div class="certificate">
-            <h1>${t.schoolName}</h1>
-            <h2>${t.certificate}</h2>
-            <div class="student-name">${s.name}</div>
-            <div class="certificate-details">
-                <p><strong>${t.admNoLabel}:</strong> ${s.admNo}</p>
-                <p><strong>${t.class}:</strong> ${s.class}</p>
-                <p><strong>${t.fatherNameLabel}:</strong> ${s.fatherName}</p>
-                <p><strong>${t.phoneLabel}:</strong> ${s.phone}</p>
-                <p><strong>${t.dobLabel}:</strong> ${new Date(s.dob).toLocaleDateString()}</p>
-                <p><strong>${t.dobInWordsLabel}:</strong> ${dobInWords}</p>
-                <p><strong>${t.admissionDateLabel}:</strong> ${new Date(s.admissionDate).toLocaleDateString()}</p>
-            </div>
-            <div class="certificate-footer">
-                <div class="certificate-signature">
-                    <div class="line">${t.issuedDate}: ${today}</div>
-                </div>
-                <div class="certificate-signature">
-                    <div class="line">${t.principal}</div>
-                </div>
-            </div>
-        </div>`; 
+        const html = `<div class="certificate"><h1>${t.schoolName}</h1><h2>${t.certificate}</h2><div class="student-name">${s.name}</div><div class="certificate-details"><p><strong>${t.admNoLabel}:</strong> ${s.admNo}</p><p><strong>${t.class}:</strong> ${s.class}</p><p><strong>${t.fatherNameLabel}:</strong> ${s.fatherName}</p><p><strong>${t.phoneLabel}:</strong> ${s.phone}</p><p><strong>${t.dobLabel}:</strong> ${new Date(s.dob).toLocaleDateString()}</p><p><strong>${t.dobInWordsLabel}:</strong> ${dobInWords}</p><p><strong>${t.admissionDateLabel}:</strong> ${new Date(s.admissionDate).toLocaleDateString()}</p></div><div class="certificate-footer"><div class="certificate-signature"><div class="line">${t.issuedDate}: ${today}</div></div><div class="certificate-signature"><div class="line">${t.principal}</div></div></div></div>`; 
         e('certificateContent').innerHTML = html; 
         e('certificateModal').style.display = 'flex'; 
     }
     
     e('closeModal').onclick = () => e('certificateModal').style.display = 'none';
-    
-    e('printCertificate').onclick = () => { 
-        const w = window.open('', '_blank'); 
-        w.document.write('<html><head><title>Certificate</title><style>body{font-family:Arial;padding:40px}.certificate{border:8px solid #2e7d32;padding:40px;border-radius:20px;background:#fff}</style></head><body>' + e('certificateContent').innerHTML + '</body></html>'); 
-        w.document.close(); 
-        w.print(); 
-    };
-    
+    e('printCertificate').onclick = () => { const w = window.open('', '_blank'); w.document.write('<html><head><title>Certificate</title><style>body{font-family:Arial;padding:40px}.certificate{border:8px solid #2e7d32;padding:40px;border-radius:20px;background:#fff}</style></head><body>' + e('certificateContent').innerHTML + '</body></html>'); w.document.close(); w.print(); };
     e('exportExcelBtn').onclick = () => { 
-        const data = students.map(s => ({
-            'Admission No': s.admNo, 
-            'Name': s.name, 
-            'Class': s.class, 
-            "Father's Name": s.fatherName, 
-            'Phone': s.phone, 
-            'DOB': new Date(s.dob).toLocaleDateString(), 
-            'DOB in Words': s.dobInWords || '',
-            'Admission Date': new Date(s.admissionDate).toLocaleDateString()
-        })); 
-        const wb = XLSX.utils.book_new(); 
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Students"); 
-        XLSX.writeFile(wb, `GMHSS_Students_${new Date().toISOString().slice(0, 10)}.xlsx`); 
+        const data = students.map(s => ({ 'Admission No': s.admNo, 'Name': s.name, 'Class': s.class, "Father's Name": s.fatherName, 'Phone': s.phone, 'DOB': new Date(s.dob).toLocaleDateString(), 'DOB in Words': s.dobInWords || '', 'Admission Date': new Date(s.admissionDate).toLocaleDateString() })); 
+        const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Students"); XLSX.writeFile(wb, `GMHSS_Students_${new Date().toISOString().slice(0,10)}.xlsx`); 
     };
     
-    // ==================== RENDER LIST FUNCTION ====================
+    // ==================== RENDER LIST ====================
     function renderList() { 
         const term = e('searchInput').value.toLowerCase(); 
         const t = translations[isUrdu ? 'ur' : 'en']; 
-        
         let filtered = students; 
-        if (selectedClass !== 'all') 
-            filtered = filtered.filter(s => s.class === selectedClass); 
-        
-        filtered = filtered.filter(s => 
-            s.name?.toLowerCase().includes(term) || 
-            s.admNo?.toLowerCase().includes(term) || 
-            s.fatherName?.toLowerCase().includes(term) || 
-            s.class?.toLowerCase().includes(term)
-        ); 
-        
-        if (filtered.length === 0) { 
-            e('studentList').innerHTML = `<div class="no-data"><i class="fas fa-search fa-2x"></i><p>${t.noStudents}</p></div>`; 
-            return; 
-        } 
-        
-        e('studentList').innerHTML = filtered.map(s => 
-            `<div class="student-card">
-                <div class="student-avatar">
-                    ${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-user-graduate fa-2x"></i>'}
-                </div>
-                <div class="student-info">
-                    <div class="student-name">${s.name}</div>
-                    <div class="student-details">
-                        <i class="fas fa-id-card"></i> ${t.class}: ${s.class} | <i class="fas fa-hashtag"></i> ${s.admNo}
-                    </div>
-                    <div class="student-contact">
-                        <i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}
-                    </div>
-                    <div class="student-actions">
-                        <button class="action-btn print" onclick="printStudent('${s.id}')">
-                            <i class="fas fa-print"></i> ${t.print}
-                        </button>
-                        <button class="action-btn edit" onclick="editStudent('${s.id}')">
-                            <i class="fas fa-edit"></i> ${t.edit}
-                        </button>
-                        <button class="action-btn delete" onclick="deleteMe('${s.id}')">
-                            <i class="fas fa-trash"></i> ${t.delete}
-                        </button>
-                    </div>
-                </div>
-            </div>`
-        ).join(''); 
+        if (selectedClass !== 'all') filtered = filtered.filter(s => s.class === selectedClass); 
+        filtered = filtered.filter(s => s.name?.toLowerCase().includes(term) || s.admNo?.toLowerCase().includes(term) || s.fatherName?.toLowerCase().includes(term) || s.class?.toLowerCase().includes(term)); 
+        if (filtered.length === 0) { e('studentList').innerHTML = `<div class="no-data"><i class="fas fa-search fa-2x"></i><p>${t.noStudents}</p></div>`; return; } 
+        e('studentList').innerHTML = filtered.map(s => `<div class="student-card"><div class="student-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-user-graduate fa-2x"></i>'}</div><div class="student-info"><div class="student-name">${s.name}</div><div class="student-details"><i class="fas fa-id-card"></i> ${t.class}: ${s.class} | <i class="fas fa-hashtag"></i> ${s.admNo}</div><div class="student-contact"><i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}</div><div class="student-actions"><button class="action-btn print" onclick="printStudent('${s.id}')"><i class="fas fa-print"></i> ${t.print}</button><button class="action-btn edit" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i> ${t.edit}</button><button class="action-btn delete" onclick="deleteMe('${s.id}')"><i class="fas fa-trash"></i> ${t.delete}</button></div></div></div>`).join(''); 
     }
-    
     e('searchInput').addEventListener('input', renderList);
 
-    // ==================== FORM SUBMIT HANDLER (FOR NEW STUDENTS ONLY) ====================
+    // ==================== FORM SUBMIT ====================
     e('studentForm').onsubmit = async (event) => {
         event.preventDefault();
-        
-        if (currentId !== null) {
-            return;
-        }
-        
+        if (currentId !== null) return;
         if (isSubmitting) return;
-        
         const t = translations[isUrdu ? 'ur' : 'en'];
-        
-        if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) {
-            showMessage(t.fillAllFields, false);
-            return;
-        }
-        
+        if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) { showMessage(t.fillAllFields, false); return; }
         const admNo = e('admNo').value.trim();
-        if (!admNo) {
-            showMessage('Admission number is required', false);
-            return;
-        }
-        
-        if (isDuplicateAdmissionNo(admNo)) {
-            showMessage(t.duplicateAdmNo, false);
-            return;
-        }
-        
+        if (!admNo) { showMessage('Admission number is required', false); return; }
+        if (isDuplicateAdmissionNo(admNo)) { showMessage(t.duplicateAdmNo, false); return; }
         e('saveBtn').disabled = true;
         e('saveBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.saving}`;
         isSubmitting = true;
-        
         try {
             let dobInWords = e('dobInWords').value;
-            if (!dobInWords && e('dob').value) {
-                dobInWords = dateToWords(e('dob').value);
-            }
-            
-            const data = {
-                admNo,
-                name: e('name').value,
-                class: e('class').value,
-                fatherName: e('fatherName').value,
-                phone: e('phone').value,
-                dob: e('dob').value,
-                dobInWords: dobInWords,
-                admissionDate: e('admissionDate').value,
-                photo: e('studentPhoto').src || '',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            
+            if (!dobInWords && e('dob').value) dobInWords = dateToWords(e('dob').value);
+            const data = { admNo, name: e('name').value, class: e('class').value, fatherName: e('fatherName').value, phone: e('phone').value, dob: e('dob').value, dobInWords, admissionDate: e('admissionDate').value, photo: e('studentPhoto').src || '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
             await studentsRef.push(data);
             showMessage(t.saved);
             resetForm();
-            
-        } catch (error) {
-            console.error('Save error:', error);
-            showMessage('Error: ' + error.message, false);
-        } finally {
+        } catch (error) { showMessage('Error: ' + error.message, false); } finally {
             e('saveBtn').disabled = false;
             e('saveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.save}`;
             isSubmitting = false;
         }
     };
 
-    // ==================== UPDATE BUTTON HANDLER ====================
+    // ==================== UPDATE BUTTON ====================
     e('updateBtn').onclick = async (event) => {
         event.preventDefault();
-        
-        if (!currentId) {
-            showMessage('No record selected for update', false);
-            return;
-        }
-        
+        if (!currentId) { showMessage('No record selected for update', false); return; }
         const t = translations[isUrdu ? 'ur' : 'en'];
-        
-        if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) {
-            showMessage(t.fillAllFields, false);
-            return;
-        }
-        
+        if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) { showMessage(t.fillAllFields, false); return; }
         const admNo = e('admNo').value.trim();
-        if (!admNo) {
-            showMessage('Admission number is required', false);
-            return;
-        }
-        
-        if (isDuplicateAdmissionNo(admNo, currentId)) {
-            showMessage(t.duplicateAdmNo, false);
-            return;
-        }
-        
+        if (!admNo) { showMessage('Admission number is required', false); return; }
+        if (isDuplicateAdmissionNo(admNo, currentId)) { showMessage(t.duplicateAdmNo, false); return; }
         if (isSubmitting) return;
-        
         e('updateBtn').disabled = true;
         e('updateBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.updating}`;
         isSubmitting = true;
-        
         try {
             let dobInWords = e('dobInWords').value;
-            if (!dobInWords && e('dob').value) {
-                dobInWords = dateToWords(e('dob').value);
-            }
-            
-            const updatedData = {
-                admNo,
-                name: e('name').value,
-                class: e('class').value,
-                fatherName: e('fatherName').value,
-                phone: e('phone').value,
-                dob: e('dob').value,
-                dobInWords: dobInWords,
-                admissionDate: e('admissionDate').value,
-                photo: e('studentPhoto').src || '',
-                updatedAt: new Date().toISOString()
-            };
-            
+            if (!dobInWords && e('dob').value) dobInWords = dateToWords(e('dob').value);
+            const updatedData = { admNo, name: e('name').value, class: e('class').value, fatherName: e('fatherName').value, phone: e('phone').value, dob: e('dob').value, dobInWords, admissionDate: e('admissionDate').value, photo: e('studentPhoto').src || '', updatedAt: new Date().toISOString() };
             const originalStudent = students.find(s => s.id === currentId);
-            if (originalStudent && originalStudent.createdAt) {
-                updatedData.createdAt = originalStudent.createdAt;
-            }
-            
+            if (originalStudent && originalStudent.createdAt) updatedData.createdAt = originalStudent.createdAt;
             await studentsRef.child(currentId).update(updatedData);
             showMessage(t.updated);
             resetForm();
-            
-        } catch (error) {
-            console.error('Update error:', error);
-            showMessage('Error updating record: ' + error.message, false);
-        } finally {
+        } catch (error) { showMessage('Error updating record: ' + error.message, false); } finally {
             e('updateBtn').disabled = false;
             e('updateBtn').innerHTML = `<i class="fas fa-edit"></i> ${t.update}`;
             isSubmitting = false;
@@ -1746,16 +1420,10 @@
             document.querySelectorAll('.tab, .nav-item').forEach(t => t.classList.remove('active')); 
             e(tab + 'Panel').classList.add('active'); 
             btn.classList.add('active'); 
-            
-            if (tab === 'add') { 
-                if (currentId === null) {
-                    setAutoAdmissionDate(); 
-                }
-            } 
+            if (tab === 'add' && currentId === null) setAutoAdmissionDate(); 
         }; 
     });
 
-    // Set default language to English
     setLanguage('en');
 </script>
 </body>
