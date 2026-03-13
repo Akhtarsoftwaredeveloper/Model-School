@@ -373,7 +373,6 @@
             box-shadow: 0 4px 10px rgba(0,50,0,0.05);
             border: 1px solid #c8e6c9;
             transition: all 0.3s ease;
-            /* 5-second pulse animation on all stat cards */
             animation: softPulse 5s infinite ease-in-out;
         }
         
@@ -398,7 +397,6 @@
             transition: opacity 0.5s ease-in-out;
         }
         
-        /* Fade animation for rotating card */
         .fade-out {
             opacity: 0;
         }
@@ -607,10 +605,8 @@
 </head>
 <body>
 <div class="mobile-container">
-    <!-- ===== LOGOUT BUTTON ===== -->
     <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span id="logoutText">Logout</span></button>
     
-    <!-- ===== LOGIN SECTION ===== -->
     <div id="loginSection" class="login-container">
         <div class="login-card">
             <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
@@ -618,45 +614,32 @@
                      class="logo-img"
                      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
             <div class="school-name-urdu" style="font-size: 1.8rem; margin-bottom: 20px;">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
-            
-            <!-- Language switcher for login page -->
             <div class="lang-switcher" style="margin: 10px 0 20px;">
                 <button class="lang-btn active" id="loginBtnEnglish"><i class="fas fa-globe"></i> English</button>
                 <button class="lang-btn" id="loginBtnUrdu"><i class="fas fa-globe"></i> اردو</button>
             </div>
-            
             <h2 class="login-title" id="loginTitle"><i class="fas fa-lock"></i> <span id="loginTitleText">Login</span></h2>
-            
             <div id="loginError" class="error-message"></div>
             <div id="loginSuccess" class="success-message"></div>
-            
             <form id="loginForm">
                 <div class="login-form-group">
                     <label id="emailLabel" for="email">Email Address</label>
                     <input type="email" id="email" placeholder="Enter your email" required>
                 </div>
-                
                 <div class="login-form-group">
                     <label id="passwordLabel" for="password">Password</label>
                     <input type="password" id="password" placeholder="Enter your password" required>
                 </div>
-                
                 <button type="submit" class="login-btn login-btn-primary" id="loginBtn">
                     <i class="fas fa-sign-in-alt"></i> <span id="loginBtnText">Login</span>
                 </button>
             </form>
-            
             <div class="login-footer">
                 <a href="#" id="forgotPassword">Forgot Password?</a>
             </div>
-            
             <div class="login-divider">
                 <span id="orText">OR</span>
             </div>
-            
-            <button class="login-btn login-btn-primary" id="guestLoginBtn" style="background: #004225;">
-                <i class="fas fa-user"></i> <span id="guestLoginText">Continue as Guest</span>
-            </button>
             
             <div class="login-footer" style="margin-top: 15px;">
                 <span id="noAccountText">Don't have an account?</span> <a href="#" id="contactAdmin">Contact Admin</a>
@@ -664,9 +647,7 @@
         </div>
     </div>
     
-    <!-- ===== MAIN CONTENT (PROTECTED) ===== -->
     <div id="mainContent" class="main-content">
-        <!-- ===== HEADER ===== -->
         <div class="header">
             <div class="logo-container">
                 <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
@@ -680,13 +661,11 @@
             <div class="estd-badge" id="estdBadge"> Since 1890 • پشین</div>
         </div>
         
-        <!-- language switch -->
         <div class="lang-switcher">
             <button class="lang-btn active" id="btnEnglish"><i class="fas fa-globe"></i> English</button>
             <button class="lang-btn" id="btnUrdu"><i class="fas fa-globe"></i> اردو</button>
         </div>
         
-        <!-- stats cards with 5-second pulse animation -->
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-number" id="totalStudents">0</div>
@@ -696,23 +675,19 @@
                 <div class="stat-number" id="totalClasses">0</div>
                 <div class="stat-label" id="classesLabel">Classes</div>
             </div>
-            <!-- Rotating Class Card -->
             <div class="stat-card" id="rotatingClassCard">
                 <div class="stat-number" id="rotatingClassCount">0</div>
                 <div class="stat-label" id="rotatingClassName">کچی</div>
             </div>
         </div>
         
-        <!-- tab bar -->
         <div class="tab-bar">
             <button class="tab active" data-tab="add"><i class="fas fa-plus-circle"></i> <span class="tab-text" id="tabAddText">Add Student</span></button>
             <button class="tab" data-tab="list"><i class="fas fa-list-alt"></i> <span class="tab-text" id="tabListText">Records</span></button>
         </div>
         
-        <!-- ADD PANEL -->
         <div id="addPanel" class="panel active">
             <div id="messageContainer"></div>
-            
             <div class="photo-area">
                 <div class="photo-preview" id="photoPreview">
                     <i class="fas fa-user-graduate" id="userIcon"></i>
@@ -728,7 +703,6 @@
             <div class="photo-hint" id="photoHint"><i class="fas fa-info-circle"></i> Photo will be cropped automatically</div>
             
             <form id="studentForm">
-                <!-- Admission No is now manual -->
                 <input type="text" id="admNo" placeholder="Admission No" required class="form-group">
                 <div class="form-row">
                     <input type="text" id="name" placeholder="Student Name" required>
@@ -746,7 +720,7 @@
                         <option value="نہم">نہم</option>
                         <option value="دہم">دہم</option>
                         <option value="فرسٹ ائیر"> فرسٹ ائیر </option>
-                        <option value="سیکیںڈ ائیر">سیکیںڈ ائیر</option>
+                        <option value="سیکنڈ ائیر">سکینڈ ائیر</option>
                     </select>
                 </div>
                 <input type="text" id="fatherName" placeholder="Father's Name" required class="form-group">
@@ -762,13 +736,11 @@
             </form>
         </div>
         
-        <!-- LIST PANEL -->
         <div id="listPanel" class="panel">
             <div class="search-export">
                 <input type="text" id="searchInput" placeholder="🔍 Search students...">
                 <button class="btn btn-success" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Excel</button>
             </div>
-            
             <div class="class-filter-section">
                 <div class="class-filter-title">
                     <span><i class="fas fa-filter"></i> <span id="filterTitle">Filter by Class</span></span>
@@ -776,20 +748,17 @@
                 </div>
                 <div class="class-filter-badges" id="classFilterBadges"></div>
             </div>
-            
             <div class="class-stats" id="classStats"></div>
             <div id="studentList"></div>
         </div>
     </div>
     
-    <!-- BOTTOM NAV -->
     <div class="bottom-nav" id="bottomNav" style="display: none;">
         <div class="nav-item active" data-nav="add"><i class="fas fa-home"></i><span class="nav-text" id="navHomeText">Home</span></div>
         <div class="nav-item" data-nav="list"><i class="fas fa-users"></i><span class="nav-text" id="navStudentsText">Students</span></div>
     </div>
 </div>
 
-<!-- Cropper Modal -->
 <div id="cropperModal" class="cropper-modal">
     <div class="cropper-container">
         <h3 style="margin-bottom: 15px; text-align: center;">Crop Photo</h3>
@@ -803,7 +772,6 @@
     </div>
 </div>
 
-<!-- Certificate Modal -->
 <div id="certificateModal" class="certificate-modal">
     <div class="certificate-content">
         <span class="close-modal" id="closeModal"><i class="fas fa-times"></i></span>
@@ -813,7 +781,6 @@
 </div>
 
 <script>
-    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyAiyuiOWNROyhP0ygKIULfP4jcX9tzjn28",
         authDomain: "model-2da2e.firebaseapp.com",
@@ -832,7 +799,6 @@
 
     const e = (id) => document.getElementById(id);
     
-    // Global Variables
     let students = [];
     let currentId = null;
     let isUrdu = false;
@@ -843,7 +809,6 @@
 
     const classList = ['کچی','پکی','دوئم','سوئم','چہارم','پنجم','ششم','ہفتم','ہشتم','نہم','دہم','فرسٹ ائیر','سیکنڈ ائیر'];
 
-    // Rotating card variables
     let currentClassIndex = 0;
     let rotationInterval;
 
@@ -964,7 +929,6 @@
         }
     };
 
-    // ==================== AUTHENTICATION FUNCTIONS ====================
     function showLogin() {
         e('loginSection').style.display = 'flex';
         e('mainContent').style.display = 'none';
@@ -978,14 +942,10 @@
         e('mainContent').style.display = 'block';
         e('bottomNav').style.display = 'flex';
         e('logoutBtn').style.display = 'block';
-        
         setAutoAdmissionDate();
-        
         if (user && user.isAnonymous) {
             showMessage(translations[isUrdu ? 'ur' : 'en'].guestMode, true);
         }
-
-        // Start rotating card interval
         startRotation();
     }
     
@@ -1003,13 +963,10 @@
         const email = e('email').value.trim();
         const password = e('password').value;
         const t = translations[isUrdu ? 'ur' : 'en'];
-        
         if (!email) { showLoginError(t.emailRequired); return; }
         if (!password) { showLoginError(t.passwordRequired); return; }
-        
         e('loginBtn').disabled = true;
         e('loginBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.loginBtn}`;
-        
         try {
             await auth.signInWithEmailAndPassword(email, password);
             showLoginSuccess(t.loginSuccess);
@@ -1065,7 +1022,6 @@
         e('loginError').style.display = 'none';
     }
 
-    // ==================== LANGUAGE FUNCTIONS ====================
     function setLanguage(lang) {
         const t = translations[lang];
         if (e('loginTitleText')) e('loginTitleText').textContent = t.loginTitle;
@@ -1150,38 +1106,156 @@
         e('loginBtnEnglish').classList.remove('active'); 
     });
 
-    // ==================== DATE TO WORDS CONVERSION ====================
+    // ==================== بہتر اردو تاریخ الفاظ میں تبدیلی ====================
     function dateToWords(dateString) {
         if (!dateString) return '';
-        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        const urduMonths = ['جنوری','فروری','مارچ','اپریل','مئی','جون','جولائی','اگست','ستمبر','اکتوبر','نومبر','دسمبر'];
+        
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        
+        const urduMonths = [
+            'جنوری', 'فروری', 'مارچ', 'اپریل', 'مئی', 'جون',
+            'جولائی', 'اگست', 'ستمبر', 'اکتوبر', 'نومبر', 'دسمبر'
+        ];
+        
         try {
             const date = new Date(dateString);
             if (isNaN(date.getTime())) return '';
+            
             const day = date.getDate();
             const month = date.getMonth();
             const year = date.getFullYear();
+            
             if (isUrdu) {
                 return `${convertToUrduWords(day)} ${urduMonths[month]} ${convertYearToUrduWords(year)}`;
             } else {
-                return `${getOrdinalWord(day)} ${months[month]} ${convertYearToWords(year)}`;
+                const dayWord = getOrdinalWord(day);
+                const monthWord = months[month];
+                const yearWord = convertYearToWords(year);
+                return `${dayWord} ${monthWord} ${yearWord}`;
             }
-        } catch (e) { return ''; }
+        } catch (e) {
+            console.error('Date conversion error:', e);
+            return '';
+        }
     }
     
     function getOrdinalWord(num) {
-        const ordinals = ['First','Second','Third','Fourth','Fifth','Sixth','Seventh','Eighth','Ninth','Tenth','Eleventh','Twelfth','Thirteenth','Fourteenth','Fifteenth','Sixteenth','Seventeenth','Eighteenth','Nineteenth','Twentieth','Twenty-First','Twenty-Second','Twenty-Third','Twenty-Fourth','Twenty-Fifth','Twenty-Sixth','Twenty-Seventh','Twenty-Eighth','Twenty-Ninth','Thirtieth','Thirty-First'];
-        return ordinals[num-1] || num;
+        const ordinals = [
+            'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth',
+            'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth',
+            'Eighteenth', 'Nineteenth', 'Twentieth', 'Twenty-First', 'Twenty-Second', 'Twenty-Third',
+            'Twenty-Fourth', 'Twenty-Fifth', 'Twenty-Sixth', 'Twenty-Seventh', 'Twenty-Eighth',
+            'Twenty-Ninth', 'Thirtieth', 'Thirty-First'
+        ];
+        return ordinals[num - 1] || num.toString();
     }
-    function convertYearToWords(year) { /* simplified */ return year.toString(); }
-    function convertToUrduWords(num) { return num.toString(); }
-    function convertYearToUrduWords(year) { return year.toString(); }
+    
+    function convertYearToWords(year) {
+        if (year < 1000) return year.toString();
+        const thousands = Math.floor(year / 1000);
+        const remainder = year % 1000;
+        if (remainder === 0) {
+            return numberToWords(thousands) + ' Thousand';
+        } else if (remainder < 100) {
+            return numberToWords(thousands) + ' Thousand ' + numberToWords(remainder);
+        } else {
+            const hundreds = Math.floor(remainder / 100);
+            const tens = remainder % 100;
+            if (tens === 0) {
+                return numberToWords(thousands) + ' Thousand ' + numberToWords(hundreds) + ' Hundred';
+            } else {
+                return numberToWords(thousands) + ' Thousand ' + numberToWords(hundreds) + ' Hundred ' + numberToWords(tens);
+            }
+        }
+    }
+    
+    function numberToWords(num) {
+        const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+            'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen',
+            'Eighteen', 'Nineteen'];
+        const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+        if (num < 20) return ones[num];
+        if (num < 100) {
+            return tens[Math.floor(num / 10)] + (num % 10 ? ' ' + ones[num % 10] : '');
+        }
+        return num.toString();
+    }
+    
+    function convertToUrduWords(num) {
+        const urduNumbers = [
+            'صفر', 'ایک', 'دو', 'تین', 'چار', 'پانچ', 'چھ', 'سات', 'آٹھ', 'نو', 'دس',
+            'گیارہ', 'بارہ', 'تیرہ', 'چودہ', 'پندرہ', 'سولہ', 'سترہ', 'اٹھارہ', 'انیس',
+            'بیس', 'اکیس', 'بائیس', 'تئیس', 'چوبیس', 'پچیس', 'چھبیس', 'ستائیس',
+            'اٹھائیس', 'انتیس', 'تیس', 'اکتیس'
+        ];
+        return urduNumbers[num] || num.toString();
+    }
+    
+    // بہتر اردو سال کی تبدیلی
+    function convertYearToUrduWords(year) {
+        if (year < 1000) {
+            return convertToUrduWords(year);
+        }
+        
+        // 1000 سے 1999 تک (مثلاً 1890 = اٹھارہ سو نوے)
+        if (year >= 1000 && year < 2000) {
+            let hundreds = Math.floor(year / 100); // 10 سے 19
+            let remainder = year % 100;
+            if (hundreds === 10) { // 1000
+                return 'ایک ہزار' + (remainder ? ' ' + convertToUrduWords(remainder) : '');
+            } else {
+                let hundredsWord = convertToUrduWords(hundreds) + ' سو';
+                if (remainder === 0) {
+                    return hundredsWord;
+                } else {
+                    return hundredsWord + ' ' + convertToUrduWords(remainder);
+                }
+            }
+        }
+        
+        // 2000 اور اس سے اوپر
+        const thousands = Math.floor(year / 1000);
+        const remainder = year % 1000;
+        
+        let thousandsWord;
+        if (thousands === 1) {
+            thousandsWord = 'ایک ہزار';
+        } else if (thousands === 2) {
+            thousandsWord = 'دو ہزار';
+        } else {
+            thousandsWord = convertToUrduWords(thousands) + ' ہزار';
+        }
+        
+        if (remainder === 0) {
+            return thousandsWord;
+        }
+        
+        if (remainder < 100) {
+            return thousandsWord + ' ' + convertToUrduWords(remainder);
+        } else {
+            let hundreds = Math.floor(remainder / 100);
+            let tens = remainder % 100;
+            let hundredsWord;
+            if (hundreds === 1) {
+                hundredsWord = 'ایک سو';
+            } else {
+                hundredsWord = convertToUrduWords(hundreds) + ' سو';
+            }
+            if (tens === 0) {
+                return thousandsWord + ' ' + hundredsWord;
+            } else {
+                return thousandsWord + ' ' + hundredsWord + ' ' + convertToUrduWords(tens);
+            }
+        }
+    }
 
     e('dob').addEventListener('change', function() {
         e('dobInWords').value = dateToWords(this.value);
     });
 
-    // ==================== PHOTO FUNCTIONS ====================
     e('cameraBtn').addEventListener('click', () => { e('photoInput').setAttribute('capture','environment'); e('photoInput').click(); });
     e('galleryBtn').addEventListener('click', () => { e('galleryInput').removeAttribute('capture'); e('galleryInput').click(); });
     
@@ -1209,7 +1283,6 @@
     
     e('cancelCropBtn').addEventListener('click', () => { e('cropperModal').style.display = 'none'; if(cropper) { cropper.destroy(); cropper = null; } });
 
-    // ==================== FILTER FUNCTIONS ====================
     function getClassCounts() { 
         const counts = {}; 
         classList.forEach(cls => counts[cls] = 0); 
@@ -1230,7 +1303,6 @@
     window.filterByClass = (className) => { selectedClass = className; renderClassFilter(); renderList(); };
     e('clearFilterBtn').onclick = () => { selectedClass = 'all'; renderClassFilter(); renderList(); };
 
-    // ==================== FIREBASE DATA ====================
     studentsRef.on('value', (snapshot) => { 
         const data = snapshot.val(); 
         students = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : []; 
@@ -1257,7 +1329,6 @@
     
     function setAutoAdmissionDate() { e('admissionDate').value = new Date().toISOString().split('T')[0]; }
 
-    // ==================== ROTATING CARD ====================
     function startRotation() {
         if (rotationInterval) clearInterval(rotationInterval);
         rotationInterval = setInterval(() => {
@@ -1279,12 +1350,10 @@
         e('rotatingClassName').textContent = className;
     }
 
-    // ==================== DUPLICATE CHECK ====================
     function isDuplicateAdmissionNo(admNo, excludeId = null) {
         return students.some(s => s.admNo === admNo && (excludeId === null || s.id !== excludeId));
     }
 
-    // ==================== FORM RESET ====================
     function resetForm() { 
         e('studentForm').reset(); 
         e('studentPhoto').classList.add('hidden'); 
@@ -1297,7 +1366,6 @@
         setAutoAdmissionDate(); 
     }
 
-    // ==================== CRUD ====================
     window.editStudent = (id) => { 
         const s = students.find(x => x.id === id); if(!s) return; 
         currentId = id; 
@@ -1344,7 +1412,6 @@
         const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Students"); XLSX.writeFile(wb, `GMHSS_Students_${new Date().toISOString().slice(0,10)}.xlsx`); 
     };
     
-    // ==================== RENDER LIST ====================
     function renderList() { 
         const term = e('searchInput').value.toLowerCase(); 
         const t = translations[isUrdu ? 'ur' : 'en']; 
@@ -1356,7 +1423,6 @@
     }
     e('searchInput').addEventListener('input', renderList);
 
-    // ==================== FORM SUBMIT ====================
     e('studentForm').onsubmit = async (event) => {
         event.preventDefault();
         if (currentId !== null) return;
@@ -1383,7 +1449,6 @@
         }
     };
 
-    // ==================== UPDATE BUTTON ====================
     e('updateBtn').onclick = async (event) => {
         event.preventDefault();
         if (!currentId) { showMessage('No record selected for update', false); return; }
@@ -1412,7 +1477,6 @@
         }
     };
 
-    // ==================== TAB NAVIGATION ====================
     document.querySelectorAll('.tab, .nav-item').forEach(btn => { 
         btn.onclick = () => { 
             const tab = btn.dataset.tab || btn.dataset.nav; 
