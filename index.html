@@ -43,7 +43,6 @@
             font-display: swap;
         }
         
-        /* Additional backup sources for better compatibility */
         @font-face {
             font-family: 'Jameel Noori Nastaleeq';
             src: local('Jameel Noori Nastaleeq'),
@@ -54,7 +53,6 @@
             font-display: swap;
         }
         
-        /* Font stack with multiple fallbacks */
         .urdu-text { 
             font-family: 'Jameel Noori Nastaleeq', 'Jameel Noori Nastaleeq Regular', 'Noto Nastaliq Urdu', 'AlQalam Shahzaib', 'Arial Unicode MS', 'sans-serif' !important; 
             direction: rtl; 
@@ -65,7 +63,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Force Urdu font on all Urdu elements */
         .urdu-text, 
         [lang="ur"],
         .school-name-urdu,
@@ -81,7 +78,6 @@
             font-family: inherit;
         }
         
-        /* When Urdu mode is active */
         body.urdu-mode,
         body.urdu-mode .header *,
         body.urdu-mode .bottom-nav *,
@@ -94,7 +90,6 @@
             font-family: 'Jameel Noori Nastaleeq', 'Jameel Noori Nastaleeq Regular', 'Noto Nastaliq Urdu', 'sans-serif' !important;
         }
         
-        /* === FULL MOBILE SCREEN – STRETCHES TO FIT ANY DEVICE === */
         .mobile-container { 
             width: 100%;
             min-height: 100vh;
@@ -105,7 +100,6 @@
             border-radius: 0;
         }
         
-        /* ===== HEADER – WHITE + GREEN ===== */
         .header { 
             background: #ffffff; 
             padding: 28px 16px 24px;
@@ -182,7 +176,6 @@
             box-shadow: 0 2px 8px rgba(46,125,50,0.3);
         }
         
-        /* Login Container */
         .login-container {
             flex: 1;
             display: flex;
@@ -452,7 +445,6 @@
         input::placeholder { color: #81c784; }
         select option { background: #ffffff; color: #1b5e20; }
         
-        /* DOB in Words field - read-only style */
         input[readonly] {
             background-color: #f5f5f5;
             color: #2e7d32;
@@ -462,6 +454,84 @@
         
         .urdu-mode input[readonly] {
             font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif !important;
+        }
+        
+        /* Document sections */
+        .docs-section {
+            margin-top: 20px;
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 24px;
+            border: 1px solid #c8e6c9;
+        }
+        .doc-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 18px;
+            border: 1px solid #a5d6a7;
+        }
+        .doc-preview {
+            width: 50px;
+            height: 60px;
+            border-radius: 12px;
+            border: 1px dashed #2e7d32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f9fff9;
+        }
+        .doc-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .doc-preview i {
+            font-size: 1.5rem;
+            color: #81c784;
+        }
+        .doc-options {
+            flex: 1;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        .doc-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .doc-camera-btn {
+            background: #2e7d32;
+            color: white;
+        }
+        .doc-gallery-btn {
+            background: #ffffff;
+            color: #1b5e20;
+            border: 1px solid #a5d6a7;
+        }
+        .doc-clear-btn {
+            background: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+            flex: 0.3;
+        }
+        .doc-hint {
+            font-size: 0.7rem;
+            color: #2e7d32;
+            margin: 5px 0 10px;
         }
         
         .photo-area { 
@@ -550,6 +620,8 @@
         .action-btn.print { background: #2e7d32; color: white; }
         .action-btn.edit { background: #ffb300; color: #1f2a0e; }
         .action-btn.delete { background: #d32f2f; color: white; }
+        .action-btn.doc { background: #0288d1; color: white; } /* for document view */
+        .action-btn.view { background: #7b1fa2; color: white; } /* for view document */
         
         .bottom-nav { 
             background: #ffffff; padding: 12px 20px; display: flex; justify-content: space-around; 
@@ -586,6 +658,12 @@
         .certificate .student-name { color: #1b5e20; }
         .close-modal { color: #2e7d32; }
 
+        /* Document view modal */
+        .doc-modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,30,0,0.9); display: none; justify-content: center; align-items: center; z-index: 4000; }
+        .doc-modal-content { background: #ffffff; padding: 20px; border-radius: 30px; max-width: 600px; width: 90%; max-height: 80vh; overflow: auto; text-align: center; border: 3px solid #2e7d32; }
+        .doc-modal-content img { max-width: 100%; max-height: 60vh; border-radius: 20px; margin-bottom: 15px; }
+        .doc-print-btn { background: #2e7d32; color: white; padding: 12px 25px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; margin: 5px; }
+
         .no-data { text-align: center; padding: 40px; color: #81c784; background: #f1f8e9; border-radius: 28px; }
         .success-message { background: #2e7d32; color: white; border-radius: 30px; padding: 14px; text-align: center; margin:10px 0; animation: slideIn 0.3s, fadeOut 3s forwards; }
         .error-message { background: #d32f2f; color: white; border-radius: 30px; padding: 14px; text-align: center; margin:10px 0; animation: slideIn 0.3s, fadeOut 3s forwards; }
@@ -603,12 +681,6 @@
     <!-- ===== LOGIN SECTION ===== -->
     <div id="loginSection" class="login-container">
         <div class="login-card">
-            <div class="logo-container">
-                <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
-                     alt="School Logo" 
-                     class="logo-img"
-                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
-            </div>
             <div class="school-name-urdu" style="font-size: 1.8rem; margin-bottom: 20px;">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
             
             <!-- Language switcher for login page -->
@@ -667,7 +739,6 @@
                      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
             </div>
             <div class="header-text">
-                <!-- ONLY URDU NAME (AS REQUESTED) -->
                 <div class="school-name-urdu" id="schoolNameUrdu">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
             </div>
             <div class="estd-badge" id="estdBadge"> Since 1890 • پشین</div>
@@ -719,26 +790,77 @@
             </div>
             <div class="photo-hint" id="photoHint"><i class="fas fa-info-circle"></i> Photo will be cropped automatically</div>
             
+            <!-- DOCUMENTS SECTION (B Form, CNIC, School Certificate) with camera & gallery for each -->
+            <div class="docs-section">
+                <div style="font-weight:700; color:#1b5e20; margin-bottom:10px;"><i class="fas fa-folder-open"></i> Documents</div>
+                
+                <!-- B Form -->
+                <div class="doc-item">
+                    <div class="doc-preview" id="bformPreview">
+                        <i class="fas fa-file-alt" id="bformIcon"></i>
+                        <img id="bformImage" class="hidden">
+                    </div>
+                    <div class="doc-options">
+                        <button class="doc-btn doc-camera-btn" id="bformCameraBtn"><i class="fas fa-camera"></i> Camera</button>
+                        <button class="doc-btn doc-gallery-btn" id="bformGalleryBtn"><i class="fas fa-images"></i> Gallery</button>
+                        <button class="doc-btn doc-clear-btn" id="bformClearBtn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="file" id="bformCameraInput" accept="image/*" capture="environment" hidden>
+                    <input type="file" id="bformGalleryInput" accept="image/*" hidden>
+                </div>
+                
+                <!-- CNIC -->
+                <div class="doc-item">
+                    <div class="doc-preview" id="cnicPreview">
+                        <i class="fas fa-id-card" id="cnicIcon"></i>
+                        <img id="cnicImage" class="hidden">
+                    </div>
+                    <div class="doc-options">
+                        <button class="doc-btn doc-camera-btn" id="cnicCameraBtn"><i class="fas fa-camera"></i> Camera</button>
+                        <button class="doc-btn doc-gallery-btn" id="cnicGalleryBtn"><i class="fas fa-images"></i> Gallery</button>
+                        <button class="doc-btn doc-clear-btn" id="cnicClearBtn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="file" id="cnicCameraInput" accept="image/*" capture="environment" hidden>
+                    <input type="file" id="cnicGalleryInput" accept="image/*" hidden>
+                </div>
+                
+                <!-- School Certificate -->
+                <div class="doc-item">
+                    <div class="doc-preview" id="schoolCertPreview">
+                        <i class="fas fa-certificate" id="schoolCertIcon"></i>
+                        <img id="schoolCertImage" class="hidden">
+                    </div>
+                    <div class="doc-options">
+                        <button class="doc-btn doc-camera-btn" id="schoolCertCameraBtn"><i class="fas fa-camera"></i> Camera</button>
+                        <button class="doc-btn doc-gallery-btn" id="schoolCertGalleryBtn"><i class="fas fa-images"></i> Gallery</button>
+                        <button class="doc-btn doc-clear-btn" id="schoolCertClearBtn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="file" id="schoolCertCameraInput" accept="image/*" capture="environment" hidden>
+                    <input type="file" id="schoolCertGalleryInput" accept="image/*" hidden>
+                </div>
+                <div class="doc-hint"><i class="fas fa-info-circle"></i> Upload images of documents (camera/gallery) - they will be cropped</div>
+            </div>
+            
             <form id="studentForm">
-                <input type="text" id="admNo" placeholder="Admission No" required class="form-group" readonly>
+                <!-- Admission No is now manual (readonly removed) -->
+                <input type="text" id="admNo" placeholder="Admission No" required class="form-group">
                 <div class="form-row">
                     <input type="text" id="name" placeholder="Student Name" required>
                     <select id="class" required>
                         <option value="" id="selectClassOption">Select Class</option>
-                        <option value="Nursery">Nursery</option>
-                        <option value="KG">KG</option>
-                        <option value="1st">1st</option>
-                        <option value="2nd">2nd</option>
-                        <option value="3rd">3rd</option>
-                        <option value="4th">4th</option>
-                        <option value="5th">5th</option>
-                        <option value="6th">6th</option>
-                        <option value="7th">7th</option>
-                        <option value="8th">8th</option>
-                        <option value="9th">9th</option>
-                        <option value="10th">10th</option>
-                        <option value="11th">11th</option>
-                        <option value="12th">12th</option>
+                        <option value="کچی">کچی</option>
+                        <option value="پکی">پکی</option>
+                        <option value="دوئم">دوئم</option>
+                        <option value="سوئم">سوئم</option>
+                        <option value="چہارم">چہارم</option>
+                        <option value="پنجم">پنجم</option>
+                        <option value="ششم">ششم</option>
+                        <option value="ہفتم">ہفتم</option>
+                        <option value="ہشتم">ہشتم</option>
+                        <option value="نہم">نہم</option>
+                        <option value="دہم">دہم</option>
+                        <option value="فرسٹ ائیر"> فرسٹ ائیر </option>
+                        <option value="سیکیںڈ ائیر">سیکیںڈ ائیر</option>
                     </select>
                 </div>
                 <input type="text" id="fatherName" placeholder="Father's Name" required class="form-group">
@@ -782,10 +904,10 @@
     </div>
 </div>
 
-<!-- Cropper Modal -->
+<!-- Cropper Modal (reused for documents) -->
 <div id="cropperModal" class="cropper-modal">
     <div class="cropper-container">
-        <h3 style="margin-bottom: 15px; text-align: center;">Crop Photo</h3>
+        <h3 style="margin-bottom: 15px; text-align: center;" id="cropperTitle">Crop Document</h3>
         <div class="cropper-box">
             <img id="cropperImage" src="">
         </div>
@@ -796,12 +918,24 @@
     </div>
 </div>
 
-<!-- Certificate Modal -->
+<!-- Certificate Modal (for enrollment cert) -->
 <div id="certificateModal" class="certificate-modal">
     <div class="certificate-content">
         <span class="close-modal" id="closeModal"><i class="fas fa-times"></i></span>
         <div id="certificateContent"></div>
         <button class="btn btn-primary" id="printCertificate"><i class="fas fa-print"></i> Print Certificate</button>
+    </div>
+</div>
+
+<!-- Document Viewer Modal (for full screen) -->
+<div id="docViewerModal" class="doc-modal">
+    <div class="doc-modal-content">
+        <h3 id="docViewerTitle" style="color:#1b5e20; margin-bottom:15px;">Document</h3>
+        <img id="docViewerImage" src="" alt="Document">
+        <div>
+            <button class="doc-print-btn" id="printDocBtn"><i class="fas fa-print"></i> Print</button>
+            <button class="doc-print-btn" id="closeDocBtn" style="background:#f5f5f5; color:#1b5e20;"><i class="fas fa-times"></i> Close</button>
+        </div>
     </div>
 </div>
 
@@ -822,7 +956,7 @@
     const auth = firebase.auth();
     const db = firebase.database();
     const studentsRef = db.ref('students');
-    const counterRef = db.ref('counter');
+    const counterRef = db.ref('counter'); // still kept but not used for admissionNo
 
     // DOM Elements
     const e = (id) => document.getElementById(id);
@@ -835,8 +969,9 @@
     let selectedClass = 'all';
     let cropper = null;
     let currentUser = null;
+    let currentDocType = null; // for cropping: 'bform', 'cnic', 'schoolCert'
 
-    const classList = ['Nursery','KG','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th'];
+    const classList = ['کچی','پکی','دوئم','سوئم','چہارم','پنجم','ششم','ہفتم','ہشتم','نہم','دہم','فرسٹ ائیر','سیکنڈ ائیر'];
 
     // Translations
     const translations = {
@@ -881,6 +1016,7 @@
             allClasses:"All Classes", 
             noStudents:"No students found", 
             clearFilter:"Clear",
+            duplicateAdmNo:"❌ Admission number already exists. Please use a different number.",
             // Login translations
             loginTitle:"Login",
             emailLabel:"Email Address",
@@ -896,7 +1032,14 @@
             loginError:"Invalid email or password",
             guestMode:"Guest Mode - Limited Access",
             emailRequired:"Please enter your email",
-            passwordRequired:"Please enter your password"
+            passwordRequired:"Please enter your password",
+            // Document related
+            bform:"B-Form",
+            cnic:"CNIC",
+            schoolCert:"School Certificate",
+            viewDoc:"View",
+            printAll:"Print All Docs",
+            downloadPDF:"Download PDF"
         },
         ur: { 
             schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
@@ -939,6 +1082,7 @@
             allClasses:"تمام کلاسیں", 
             noStudents:"کوئی طالب علم نہیں ملا", 
             clearFilter:"صاف کریں",
+            duplicateAdmNo:"❌ داخلہ نمبر پہلے سے موجود ہے۔ براہ کرم دوسرا نمبر استعمال کریں۔",
             // Login translations
             loginTitle:"لاگ ان",
             emailLabel:"ای میل ایڈریس",
@@ -954,7 +1098,14 @@
             loginError:"غلط ای میل یا پاس ورڈ",
             guestMode:"مہمان موڈ - محدود رسائی",
             emailRequired:"براہ کرم اپنا ای میل درج کریں",
-            passwordRequired:"براہ کرم اپنا پاس ورڈ درج کریں"
+            passwordRequired:"براہ کرم اپنا پاس ورڈ درج کریں",
+            // Document related
+            bform:"بی فارم",
+            cnic:"شناختی کارڈ",
+            schoolCert:"سکول سرٹیفکیٹ",
+            viewDoc:"دیکھیں",
+            printAll:"تمام دستاویزات پرنٹ کریں",
+            downloadPDF:"پی ڈی ایف ڈاؤن لوڈ"
         }
     };
 
@@ -974,8 +1125,6 @@
         e('logoutBtn').style.display = 'block';
         
         // Initialize main content
-        initializeCounter();
-        loadNextAdmissionNumber();
         setAutoAdmissionDate();
         
         // Show guest mode message if guest
@@ -987,10 +1136,8 @@
     // Check auth state
     auth.onAuthStateChanged((user) => {
         if (user) {
-            // User is signed in
             showMainContent(user);
         } else {
-            // User is signed out
             showLogin();
         }
     });
@@ -1003,7 +1150,6 @@
         const password = e('password').value;
         const t = translations[isUrdu ? 'ur' : 'en'];
         
-        // Validate
         if (!email) {
             showLoginError(t.emailRequired);
             return;
@@ -1013,7 +1159,6 @@
             return;
         }
         
-        // Disable button
         e('loginBtn').disabled = true;
         e('loginBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.loginBtn}`;
         
@@ -1028,7 +1173,6 @@
         }
     });
     
-    // Guest login
     e('guestLoginBtn').addEventListener('click', async () => {
         const t = translations[isUrdu ? 'ur' : 'en'];
         
@@ -1046,7 +1190,6 @@
         }
     });
     
-    // Logout
     e('logoutBtn').addEventListener('click', async () => {
         try {
             await auth.signOut();
@@ -1055,7 +1198,6 @@
         }
     });
     
-    // Forgot password
     e('forgotPassword').addEventListener('click', (e) => {
         e.preventDefault();
         const email = prompt(isUrdu ? 'اپنا ای میل ایڈریس درج کریں:' : 'Enter your email address:');
@@ -1070,7 +1212,6 @@
         }
     });
     
-    // Contact admin
     e('contactAdmin').addEventListener('click', (e) => {
         e.preventDefault();
         alert(isUrdu ? 'براہ کرم ایڈمن سے رابطہ کریں: admin@gmhss.edu.pk' : 'Please contact admin: admin@gmhss.edu.pk');
@@ -1092,19 +1233,17 @@
     function setLanguage(lang) {
         const t = translations[lang];
         
-        // Update login page
-        if (e('loginTitleText')) e('loginTitleText').textContent = t.loginTitle;
-        if (e('emailLabel')) e('emailLabel').textContent = t.emailLabel;
-        if (e('passwordLabel')) e('passwordLabel').textContent = t.passwordLabel;
-        if (e('loginBtnText')) e('loginBtnText').textContent = t.loginBtn;
-        if (e('forgotPassword')) e('forgotPassword').textContent = t.forgotPassword;
-        if (e('orText')) e('orText').textContent = t.orText;
-        if (e('guestLoginText')) e('guestLoginText').textContent = t.guestLogin;
-        if (e('noAccountText')) e('noAccountText').textContent = t.noAccount;
-        if (e('contactAdmin')) e('contactAdmin').textContent = t.contactAdmin;
-        if (e('logoutText')) e('logoutText').textContent = t.logout;
+        e('loginTitleText').textContent = t.loginTitle;
+        e('emailLabel').textContent = t.emailLabel;
+        e('passwordLabel').textContent = t.passwordLabel;
+        e('loginBtnText').textContent = t.loginBtn;
+        e('forgotPassword').textContent = t.forgotPassword;
+        e('orText').textContent = t.orText;
+        e('guestLoginText').textContent = t.guestLogin;
+        e('noAccountText').textContent = t.noAccount;
+        e('contactAdmin').textContent = t.contactAdmin;
+        e('logoutText').textContent = t.logout;
         
-        // Update main content
         e('schoolNameUrdu').textContent = t.schoolName;
         e('estdBadge').innerHTML = t.estd;
         e('totalLabel').textContent = t.total; 
@@ -1141,7 +1280,6 @@
         renderList();
     }
 
-    // Language switch event listeners for login page
     e('loginBtnEnglish').addEventListener('click', () => { 
         isUrdu = false; 
         setLanguage('en'); 
@@ -1160,7 +1298,6 @@
         e('btnEnglish').classList.remove('active'); 
     });
 
-    // Language switch event listeners for main content
     e('btnEnglish').addEventListener('click', () => { 
         isUrdu = false; 
         setLanguage('en'); 
@@ -1202,10 +1339,8 @@
             const year = date.getFullYear();
             
             if (isUrdu) {
-                // Urdu format: "پندرہ جنوری دو ہزار بائیس"
                 return `${convertToUrduWords(day)} ${urduMonths[month]} ${convertYearToUrduWords(year)}`;
             } else {
-                // English format: "Fifteenth January Two Thousand Twenty-Two"
                 const dayWord = getOrdinalWord(day);
                 const monthWord = months[month];
                 const yearWord = convertYearToWords(year);
@@ -1293,7 +1428,6 @@
         }
     }
 
-    // ==================== DOB AUTO-CONVERSION ====================
     e('dob').addEventListener('change', function() {
         const dobValue = this.value;
         if (dobValue) {
@@ -1350,9 +1484,18 @@
     e('cropBtn').addEventListener('click', () => { 
         if (cropper) { 
             const canvas = cropper.getCroppedCanvas({ width: 300, height: 400 }); 
-            e('studentPhoto').src = canvas.toDataURL('image/jpeg'); 
-            e('studentPhoto').classList.remove('hidden'); 
-            e('userIcon').classList.add('hidden'); 
+            if (currentDocType) {
+                // For documents
+                e(currentDocType + 'Image').src = canvas.toDataURL('image/jpeg');
+                e(currentDocType + 'Image').classList.remove('hidden');
+                e(currentDocType + 'Icon').classList.add('hidden');
+                currentDocType = null;
+            } else {
+                // For student photo
+                e('studentPhoto').src = canvas.toDataURL('image/jpeg'); 
+                e('studentPhoto').classList.remove('hidden'); 
+                e('userIcon').classList.add('hidden'); 
+            }
             e('cropperModal').style.display = 'none'; 
             cropper.destroy(); 
             cropper = null; 
@@ -1365,7 +1508,85 @@
             cropper.destroy(); 
             cropper = null; 
         }
+        currentDocType = null;
     });
+
+    // ==================== DOCUMENT HANDLING ====================
+    // Generic function to setup document upload with cropping
+    function setupDocumentUpload(docType) {
+        const cameraBtn = e(docType + 'CameraBtn');
+        const galleryBtn = e(docType + 'GalleryBtn');
+        const cameraInput = e(docType + 'CameraInput');
+        const galleryInput = e(docType + 'GalleryInput');
+        const clearBtn = e(docType + 'ClearBtn');
+        const imgEl = e(docType + 'Image');
+        const iconEl = e(docType + 'Icon');
+
+        // Camera
+        cameraBtn.addEventListener('click', () => {
+            cameraInput.setAttribute('capture', 'environment');
+            cameraInput.click();
+        });
+        cameraInput.addEventListener('change', (ev) => {
+            const file = ev.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentDocType = docType;
+                    e('cropperTitle').innerText = 'Crop ' + docType.toUpperCase();
+                    showCropperForDoc(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+            ev.target.value = '';
+        });
+
+        // Gallery
+        galleryBtn.addEventListener('click', () => {
+            galleryInput.removeAttribute('capture');
+            galleryInput.click();
+        });
+        galleryInput.addEventListener('change', (ev) => {
+            const file = ev.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentDocType = docType;
+                    e('cropperTitle').innerText = 'Crop ' + docType.toUpperCase();
+                    showCropperForDoc(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+            ev.target.value = '';
+        });
+
+        // Clear button
+        clearBtn.addEventListener('click', () => {
+            imgEl.src = '';
+            imgEl.classList.add('hidden');
+            iconEl.classList.remove('hidden');
+        });
+    }
+
+    function showCropperForDoc(src) {
+        e('cropperModal').style.display = 'flex';
+        e('cropperImage').src = src;
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(e('cropperImage'), {
+            aspectRatio: NaN, // free aspect ratio for documents
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 1,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            background: false
+        });
+    }
+
+    // Setup all documents
+    setupDocumentUpload('bform');
+    setupDocumentUpload('cnic');
+    setupDocumentUpload('schoolCert');
 
     // ==================== FILTER FUNCTIONS ====================
     function getClassCounts() { 
@@ -1453,39 +1674,11 @@
         e('admissionDate').value = new Date().toISOString().split('T')[0]; 
     }
 
-    // ==================== ADMISSION NUMBER FUNCTIONS ====================
-    async function getNextAdmissionNumber() { 
-        try { 
-            const result = await counterRef.child('admissionNo').transaction(v => (v || 0) + 1); 
-            return result.snapshot.val(); 
-        } catch (e) { 
-            console.error('Error getting admission number:', e);
-            return null; 
-        } 
+    // ==================== DUPLICATE CHECK FUNCTION ====================
+    function isDuplicateAdmissionNo(admNo, excludeId = null) {
+        return students.some(s => s.admNo === admNo && (excludeId === null || s.id !== excludeId));
     }
-    
-    async function initializeCounter() { 
-        const snap = await counterRef.child('admissionNo').once('value'); 
-        if (!snap.exists()) { 
-            if (students.length > 0) { 
-                const max = Math.max(...students.map(s => parseInt(s.admNo) || 0)); 
-                await counterRef.child('admissionNo').set(max); 
-            } else { 
-                await counterRef.child('admissionNo').set(0); 
-            } 
-        } 
-    }
-    
-    async function loadNextAdmissionNumber() { 
-        try { 
-            const snap = await counterRef.child('admissionNo').once('value'); 
-            const current = snap.val() || 0; 
-            e('admNo').value = (current + 1).toString().padStart(4, '0'); 
-        } catch (e) {
-            console.error('Error loading admission number:', e);
-        } 
-    }
-    
+
     // ==================== FORM RESET FUNCTION ====================
     function resetForm() { 
         e('studentForm').reset(); 
@@ -1493,12 +1686,31 @@
         e('userIcon').classList.remove('hidden'); 
         e('studentPhoto').src = ''; 
         e('dobInWords').value = '';
+        // Clear document previews
+        ['bform','cnic','schoolCert'].forEach(doc => {
+            e(doc+'Image').src = '';
+            e(doc+'Image').classList.add('hidden');
+            e(doc+'Icon').classList.remove('hidden');
+        });
         currentId = null; 
         e('saveBtn').classList.remove('hidden'); 
         e('updateBtn').classList.add('hidden'); 
-        loadNextAdmissionNumber(); 
         setAutoAdmissionDate(); 
     }
+
+    // ==================== DOCUMENT VIEWER ====================
+    function showDocument(imgSrc, title) {
+        e('docViewerImage').src = imgSrc;
+        e('docViewerTitle').textContent = title;
+        e('docViewerModal').style.display = 'flex';
+    }
+    e('closeDocBtn').onclick = () => e('docViewerModal').style.display = 'none';
+    e('printDocBtn').onclick = () => {
+        const win = window.open('', '_blank');
+        win.document.write(`<html><head><title>Document</title></head><body style="text-align:center"><img src="${e('docViewerImage').src}" style="max-width:100%"></body></html>`);
+        win.document.close();
+        win.print();
+    };
 
     // ==================== CRUD FUNCTIONS ====================
     window.editStudent = (id) => { 
@@ -1515,6 +1727,7 @@
         e('admissionDate').value = s.admissionDate || ''; 
         e('dobInWords').value = s.dobInWords || dateToWords(s.dob) || '';
         
+        // Photo
         if (s.photo) { 
             e('studentPhoto').src = s.photo; 
             e('studentPhoto').classList.remove('hidden'); 
@@ -1523,6 +1736,20 @@
             e('studentPhoto').classList.add('hidden'); 
             e('userIcon').classList.remove('hidden'); 
         }
+        
+        // Documents
+        const docs = ['bform','cnic','schoolCert'];
+        docs.forEach(doc => {
+            if (s[doc]) {
+                e(doc+'Image').src = s[doc];
+                e(doc+'Image').classList.remove('hidden');
+                e(doc+'Icon').classList.add('hidden');
+            } else {
+                e(doc+'Image').src = '';
+                e(doc+'Image').classList.add('hidden');
+                e(doc+'Icon').classList.remove('hidden');
+            }
+        });
         
         e('saveBtn').classList.add('hidden'); 
         e('updateBtn').classList.remove('hidden'); 
@@ -1549,6 +1776,63 @@
     window.printStudent = (id) => { 
         const s = students.find(x => x.id === id); 
         if (s) generateCertificate(s); 
+    };
+    
+    // Print individual document
+    window.printDocument = (docType, id) => {
+        const s = students.find(x => x.id === id);
+        if (!s || !s[docType]) return;
+        const win = window.open('', '_blank');
+        win.document.write(`<html><head><title>${docType}</title></head><body style="text-align:center"><img src="${s[docType]}" style="max-width:100%"></body></html>`);
+        win.document.close();
+        win.print();
+    };
+
+    // View document full screen
+    window.viewDocument = (docType, id) => {
+        const s = students.find(x => x.id === id);
+        if (!s || !s[docType]) return;
+        showDocument(s[docType], docType.toUpperCase());
+    };
+
+    // Print all documents for a student
+    window.printAllDocuments = (id) => {
+        const s = students.find(x => x.id === id);
+        if (!s) return;
+        const docs = ['bform','cnic','schoolCert'].filter(d => s[d]);
+        if (docs.length === 0) {
+            alert('No documents to print');
+            return;
+        }
+        const win = window.open('', '_blank');
+        let content = '<html><head><title>All Documents</title></head><body>';
+        docs.forEach(d => {
+            content += `<img src="${s[d]}" style="max-width:100%; page-break-after: always;"><br>`;
+        });
+        content += '</body></html>';
+        win.document.write(content);
+        win.document.close();
+        win.print();
+    };
+
+    // Download all documents as PDF
+    window.downloadAllPDF = async (id) => {
+        const s = students.find(x => x.id === id);
+        if (!s) return;
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        const docs = ['bform','cnic','schoolCert'].filter(d => s[d]);
+        if (docs.length === 0) {
+            alert('No documents to download');
+            return;
+        }
+        for (let i = 0; i < docs.length; i++) {
+            if (i > 0) pdf.addPage();
+            const imgData = s[docs[i]];
+            // Calculate image dimensions to fit A4
+            pdf.addImage(imgData, 'JPEG', 10, 10, 190, 0); // width 190, height auto
+        }
+        pdf.save(`Documents_${s.admNo}.pdf`);
     };
     
     function generateCertificate(s) { 
@@ -1628,8 +1912,14 @@
             return; 
         } 
         
-        e('studentList').innerHTML = filtered.map(s => 
-            `<div class="student-card">
+        e('studentList').innerHTML = filtered.map(s => {
+            // Build document icons if present
+            let docIcons = '';
+            if (s.bform) docIcons += `<button class="action-btn doc" onclick="printDocument('bform','${s.id}')" title="Print B-Form"><i class="fas fa-print"></i></button><button class="action-btn view" onclick="viewDocument('bform','${s.id}')" title="View B-Form"><i class="fas fa-eye"></i></button>`;
+            if (s.cnic) docIcons += `<button class="action-btn doc" onclick="printDocument('cnic','${s.id}')" title="Print CNIC"><i class="fas fa-print"></i></button><button class="action-btn view" onclick="viewDocument('cnic','${s.id}')" title="View CNIC"><i class="fas fa-eye"></i></button>`;
+            if (s.schoolCert) docIcons += `<button class="action-btn doc" onclick="printDocument('schoolCert','${s.id}')" title="Print School Cert"><i class="fas fa-print"></i></button><button class="action-btn view" onclick="viewDocument('schoolCert','${s.id}')" title="View School Cert"><i class="fas fa-eye"></i></button>`;
+            
+            return `<div class="student-card">
                 <div class="student-avatar">
                     ${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-user-graduate fa-2x"></i>'}
                 </div>
@@ -1645,6 +1935,7 @@
                         <button class="action-btn print" onclick="printStudent('${s.id}')">
                             <i class="fas fa-print"></i> ${t.print}
                         </button>
+                        ${docIcons}
                         <button class="action-btn edit" onclick="editStudent('${s.id}')">
                             <i class="fas fa-edit"></i> ${t.edit}
                         </button>
@@ -1652,9 +1943,13 @@
                             <i class="fas fa-trash"></i> ${t.delete}
                         </button>
                     </div>
+                    <div style="margin-top:5px;">
+                        <button class="action-btn print" onclick="printAllDocuments('${s.id}')"><i class="fas fa-print"></i> ${t.printAll}</button>
+                        <button class="action-btn print" onclick="downloadAllPDF('${s.id}')"><i class="fas fa-file-pdf"></i> ${t.downloadPDF}</button>
+                    </div>
                 </div>
-            </div>`
-        ).join(''); 
+            </div>`;
+        }).join(''); 
     }
     
     e('searchInput').addEventListener('input', renderList);
@@ -1668,34 +1963,42 @@
             return;
         }
         
-        // Prevent double submission
         if (isSubmitting) return;
-        
-        // Validate form
-        if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) {
-            showMessage(translations[isUrdu ? 'ur' : 'en'].fillAllFields, false);
-            return;
-        }
         
         const t = translations[isUrdu ? 'ur' : 'en'];
         
-        // Disable save button
+        // Validate form
+        if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) {
+            showMessage(t.fillAllFields, false);
+            return;
+        }
+        
+        const admNo = e('admNo').value.trim();
+        if (!admNo) {
+            showMessage('Admission number is required', false);
+            return;
+        }
+        
+        // Check duplicate admission number
+        if (isDuplicateAdmissionNo(admNo)) {
+            showMessage(t.duplicateAdmNo, false);
+            return;
+        }
+        
         e('saveBtn').disabled = true;
         e('saveBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.saving}`;
         isSubmitting = true;
         
         try {
-            // Get admission number for new student
-            const nextAdmNo = await getNextAdmissionNumber();
-            if (!nextAdmNo) throw new Error('Failed to get admission number');
-            const admNo = nextAdmNo.toString().padStart(4, '0');
-            e('admNo').value = admNo;
-            
-            // Get DOB in words
             let dobInWords = e('dobInWords').value;
             if (!dobInWords && e('dob').value) {
                 dobInWords = dateToWords(e('dob').value);
             }
+            
+            // Collect document images (base64)
+            const bform = e('bformImage').src && !e('bformImage').classList.contains('hidden') ? e('bformImage').src : '';
+            const cnic = e('cnicImage').src && !e('cnicImage').classList.contains('hidden') ? e('cnicImage').src : '';
+            const schoolCert = e('schoolCertImage').src && !e('schoolCertImage').classList.contains('hidden') ? e('schoolCertImage').src : '';
             
             const data = {
                 admNo,
@@ -1707,17 +2010,15 @@
                 dobInWords: dobInWords,
                 admissionDate: e('admissionDate').value,
                 photo: e('studentPhoto').src || '',
+                bform: bform,
+                cnic: cnic,
+                schoolCert: schoolCert,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
             
-            // Save to Firebase
             await studentsRef.push(data);
-            
-            // Show success message
             showMessage(t.saved);
-            
-            // Reset the form
             resetForm();
             
         } catch (error) {
@@ -1734,38 +2035,48 @@
     e('updateBtn').onclick = async (event) => {
         event.preventDefault();
         
-        // Check if we have a student selected for update
         if (!currentId) {
             showMessage('No record selected for update', false);
             return;
         }
         
-        // Validate form fields
+        const t = translations[isUrdu ? 'ur' : 'en'];
+        
         if (!e('name').value || !e('class').value || !e('fatherName').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) {
-            showMessage(translations[isUrdu ? 'ur' : 'en'].fillAllFields, false);
+            showMessage(t.fillAllFields, false);
             return;
         }
         
-        // Prevent double submission
+        const admNo = e('admNo').value.trim();
+        if (!admNo) {
+            showMessage('Admission number is required', false);
+            return;
+        }
+        
+        // Check duplicate admission number (excluding current record)
+        if (isDuplicateAdmissionNo(admNo, currentId)) {
+            showMessage(t.duplicateAdmNo, false);
+            return;
+        }
+        
         if (isSubmitting) return;
         
-        const t = translations[isUrdu ? 'ur' : 'en'];
-        
-        // Disable button and show loading state
         e('updateBtn').disabled = true;
         e('updateBtn').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.updating}`;
         isSubmitting = true;
         
         try {
-            // Get DOB in words
             let dobInWords = e('dobInWords').value;
             if (!dobInWords && e('dob').value) {
                 dobInWords = dateToWords(e('dob').value);
             }
             
-            // Prepare the updated data
+            const bform = e('bformImage').src && !e('bformImage').classList.contains('hidden') ? e('bformImage').src : '';
+            const cnic = e('cnicImage').src && !e('cnicImage').classList.contains('hidden') ? e('cnicImage').src : '';
+            const schoolCert = e('schoolCertImage').src && !e('schoolCertImage').classList.contains('hidden') ? e('schoolCertImage').src : '';
+            
             const updatedData = {
-                admNo: e('admNo').value,
+                admNo,
                 name: e('name').value,
                 class: e('class').value,
                 fatherName: e('fatherName').value,
@@ -1774,29 +2085,25 @@
                 dobInWords: dobInWords,
                 admissionDate: e('admissionDate').value,
                 photo: e('studentPhoto').src || '',
+                bform: bform,
+                cnic: cnic,
+                schoolCert: schoolCert,
                 updatedAt: new Date().toISOString()
             };
             
-            // Preserve the createdAt field if it exists
             const originalStudent = students.find(s => s.id === currentId);
             if (originalStudent && originalStudent.createdAt) {
                 updatedData.createdAt = originalStudent.createdAt;
             }
             
-            // Update in Firebase
             await studentsRef.child(currentId).update(updatedData);
-            
-            // Show success message
             showMessage(t.updated);
-            
-            // Reset the form
             resetForm();
             
         } catch (error) {
             console.error('Update error:', error);
             showMessage('Error updating record: ' + error.message, false);
         } finally {
-            // Re-enable button and restore text
             e('updateBtn').disabled = false;
             e('updateBtn').innerHTML = `<i class="fas fa-edit"></i> ${t.update}`;
             isSubmitting = false;
@@ -1813,9 +2120,7 @@
             btn.classList.add('active'); 
             
             if (tab === 'add') { 
-                // If no student is being edited, load next admission number
                 if (currentId === null) {
-                    loadNextAdmissionNumber(); 
                     setAutoAdmissionDate(); 
                 }
             } 
