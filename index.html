@@ -90,8 +90,8 @@
         }
         
         .mobile-container { 
-            width: 150%;
-            min-height: 150vh;
+            width: 100%;
+            min-height: 100vh;
             background: #ffffff;
             display: flex;
             flex-direction: column;
@@ -593,13 +593,6 @@
     
     <!-- ===== LOGIN SECTION ===== -->
     <div id="loginSection" class="login-container">
-        <div class="logo-container">
-                <img src="https://i.postimg.cc/gjYJbrGp/logo.png" 
-                     alt="School Logo" 
-                     class="logo-img"
-                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
-            </div>
-        
         <div class="login-card">
             <div class="school-name-urdu" style="font-size: 1.8rem; margin-bottom: 20px;">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
             
@@ -638,7 +631,9 @@
                 <span id="orText">OR</span>
             </div>
             
-            
+            <button class="login-btn login-btn-primary" id="guestLoginBtn" style="background: #004225;">
+                <i class="fas fa-user"></i> <span id="guestLoginText">Continue as Guest</span>
+            </button>
             
             <div class="login-footer" style="margin-top: 15px;">
                 <span id="noAccountText">Don't have an account?</span> <a href="#" id="contactAdmin">Contact Admin</a>
