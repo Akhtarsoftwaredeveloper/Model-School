@@ -608,15 +608,15 @@
             margin-bottom: 20px;
         }
         .certificate-logo {
-            width: 300px;
-            height: 300px;
+            width: 100px;
+            height: auto;
             margin-bottom: 10px;
         }
         .certificate-school-name {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: #006400;
             font-weight: bold;
-            line-height: 1;
+            line-height: 1.3;
         }
         .certificate-title {
             font-size: 2rem;
@@ -673,32 +673,33 @@
             color: #81c784;
             font-size: 3rem;
         }
-        .certificate-footer {
-            text-align: center;
-            margin-top: 30px;
+        .certificate-signatures {
             display: flex;
             justify-content: space-between;
+            margin-top: 40px;
             align-items: flex-end;
         }
-        .certificate-principal {
+        .signature-box {
             text-align: center;
             width: 200px;
         }
-        .principal-signature {
-            font-family: 'Segoe Script', 'cursive';
-            font-size: 1.5rem;
-            color: #1b5e20;
-            border-bottom: 1px solid #2e7d32;
-            margin-bottom: 5px;
+        .signature-line {
+            border-bottom: 2px solid #2e7d32;
+            margin: 10px 0 5px;
+            height: 30px;
+            width: 100%;
         }
-        .certificate-school-footer {
+        .signature-label {
+            font-weight: bold;
+            color: #1b5e20;
+            font-size: 1rem;
+        }
+        .center-school {
+            text-align: center;
+            font-weight: bold;
             font-size: 1.3rem;
             color: #006400;
-            font-weight: bold;
-        }
-        .certificate-date {
-            font-size: 1rem;
-            color: #2e7d32;
+            align-self: center;
         }
         
         /* Thermal certificate styles - dashed and professional */
@@ -747,13 +748,6 @@
         .thermal-value {
             text-align: right;
         }
-        .thermal-footer {
-            margin-top: 20px;
-            text-align: center;
-            border-top: 1px dashed #333;
-            padding-top: 10px;
-            font-size: 1.2rem;
-        }
         .close-modal { color: #2e7d32; float: right; cursor: pointer; font-size: 1.5rem; }
 
         .no-data { text-align: center; padding: 40px; color: #81c784; background: #f1f8e9; border-radius: 28px; }
@@ -777,8 +771,9 @@
                      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
             <div class="school-name-urdu" style="font-size: 1.8rem; margin-bottom: 20px;">گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین</div>
             <div class="lang-switcher" style="margin: 10px 0 20px;">
-                <button class="lang-btn active" id="loginBtnEnglish"><i class="fas fa-globe"></i> English</button>
-                <button class="lang-btn" id="loginBtnUrdu"><i class="fas fa-globe"></i> اردو</button>
+                <!-- Default Urdu: active set on Urdu button -->
+                <button class="lang-btn" id="loginBtnEnglish"><i class="fas fa-globe"></i> English</button>
+                <button class="lang-btn active" id="loginBtnUrdu"><i class="fas fa-globe"></i> اردو</button>
             </div>
             <h2 class="login-title" id="loginTitle"><i class="fas fa-lock"></i> <span id="loginTitleText">Login</span></h2>
             <div id="loginError" class="error-message"></div>
@@ -826,8 +821,9 @@
         </div>
         
         <div class="lang-switcher">
-            <button class="lang-btn active" id="btnEnglish"><i class="fas fa-globe"></i> English</button>
-            <button class="lang-btn" id="btnUrdu"><i class="fas fa-globe"></i> اردو</button>
+            <!-- Default Urdu: active set on Urdu button -->
+            <button class="lang-btn" id="btnEnglish"><i class="fas fa-globe"></i> English</button>
+            <button class="lang-btn active" id="btnUrdu"><i class="fas fa-globe"></i> اردو</button>
         </div>
         
         <div class="stats-row">
@@ -871,9 +867,13 @@
             <div class="photo-hint" id="photoHint"><i class="fas fa-info-circle"></i> Photo will be cropped automatically</div>
             
             <form id="studentForm">
-                <input type="text" id="admNo" placeholder="Admission No" required class="form-group">
+                <!-- Admission No: numeric keyboard on mobile -->
+                <input type="text" id="admNo" placeholder="Admission No" required class="form-group" inputmode="numeric" pattern="[0-9]*">
+                
                 <div class="form-row">
-                    <input type="text" id="name" placeholder="Student Name" required>
+                    <!-- Student Name: Urdu text keyboard -->
+                    <input type="text" id="name" placeholder="Student Name" required lang="ur" inputmode="text">
+                    
                     <select id="class" required>
                         <option value="" id="selectClassOption">Select Class</option>
                         <option value="کچی">کچی</option>
@@ -891,9 +891,16 @@
                         <option value="سیکنڈ ائیر">سکینڈ ائیر</option>
                     </select>
                 </div>
-                <input type="text" id="fatherName" placeholder="Father's Name" required class="form-group">
-                <input type="text" id="caste" placeholder="Caste/Tribe" required class="form-group">
+                
+                <!-- Father's Name: Urdu text keyboard -->
+                <input type="text" id="fatherName" placeholder="Father's Name" required class="form-group" lang="ur" inputmode="text">
+                
+                <!-- Caste/Tribe: Urdu text keyboard -->
+                <input type="text" id="caste" placeholder="Caste/Tribe" required class="form-group" lang="ur" inputmode="text">
+                
+                <!-- Phone: already type="tel" brings numeric keyboard -->
                 <input type="tel" id="phone" placeholder="Phone Number" required class="form-group">
+                
                 <div class="form-row">
                     <input type="date" id="dob" required>
                     <input type="date" id="admissionDate" required> 
@@ -970,7 +977,8 @@
     
     let students = [];
     let currentId = null;
-    let isUrdu = false;
+    // Set default language to Urdu
+    let isUrdu = true;
     let isSubmitting = false;
     let selectedClass = 'all';
     let cropper = null;
@@ -1068,7 +1076,7 @@
             thermal:"تھرمل پرنٹ",
             edit:"ترمیم", 
             delete:"حذف", 
-            certificate:"سرٹیفکیٹ", 
+            certificate:"داخلہ سرٹیفکیٹ", 
             thermalTitle:"تصدیقی سرٹیفیکٹ",
             issuedDate:"تاریخ اجراء", 
             principal:"پرنسپل", 
@@ -1297,7 +1305,7 @@
         return dateString;
     }
 
-    // ==================== تاریخ کو الفاظ میں تبدیل کرنا (بغیر Date آبجیکٹ کے) ====================
+    // ==================== تاریخ کو الفاظ میں تبدیل کرنا ====================
     function dateToWords(dateString) {
         if (!dateString) return '';
         
@@ -1601,7 +1609,7 @@
     
     window.printStudent = (id) => { const s = students.find(x => x.id === id); if(s) generateCertificate(s); };
     
-    // Thermal print function with corrected date formats
+    // Thermal print function with footer removed (school name at bottom removed)
     window.thermalPrintStudent = (id) => {
         const s = students.find(x => x.id === id);
         if(!s) return;
@@ -1639,6 +1647,8 @@
                 width: 100%;
                 background: #fff;
                 box-shadow: none;
+                direction: rtl;
+                text-align: right;
             }
             .thermal-header {
                 text-align: center;
@@ -1673,19 +1683,12 @@
                 color: #000;
             }
             .thermal-value {
-                text-align: right;
-            }
-            .thermal-footer {
-                margin-top: 20px;
-                text-align: center;
-                border-top: 1px dashed #333;
-                padding-top: 10px;
-                font-size: 1.2rem;
+                text-align: left;
             }
         `);
         thermalWindow.document.write('</style></head><body>');
         thermalWindow.document.write(`
-            <div class="thermal-certificate">
+            <div class="thermal-certificate" dir="rtl">
                 <div class="thermal-header">
                     <div class="thermal-school-name">${t.schoolName}</div>
                     <div class="thermal-title">${t.thermalTitle}</div>
@@ -1701,9 +1704,7 @@
                     <div class="thermal-row"><span class="thermal-label">${t.admissionDateLabel}:</span><span class="thermal-value">${formatDate(s.admissionDate)}</span></div>
                     <div class="thermal-row"><span class="thermal-label">${t.issuedDate}:</span><span class="thermal-value">${today}</span></div>
                 </div>
-                <div class="thermal-footer">
-                    ${t.schoolName}
-                </div>
+                <!-- Thermal footer removed to save paper -->
             </div>
         `);
         thermalWindow.document.write('</body></html>');
@@ -1711,43 +1712,48 @@
         thermalWindow.print();
     };
     
-    // Professional certificate generation with corrected date formats
+    // Professional certificate generation (School Leaving Certificate in Urdu) with RTL
     function generateCertificate(s) { 
-        const t = translations[isUrdu ? 'ur' : 'en']; 
         const today = formatDate(new Date().toISOString().split('T')[0]);
         const dobInWords = s.dobInWords || dateToWords(s.dob) || '';
         const photoHtml = s.photo ? 
             `<img src="${s.photo}" alt="Student Photo">` : 
             `<div class="no-photo"><i class="fas fa-user-graduate"></i></div>`;
         
+        const schoolNameUrdu = "گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین";
+        
         const html = `
-            <div class="professional-certificate">
+            <div class="professional-certificate" dir="rtl">
                 <div class="certificate-header">
                     <img src="https://i.postimg.cc/gjYJbrGp/logo.png" class="certificate-logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ffffff\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'%232e7d32\' font-family=\'Arial\'%3E🏫%3C/text%3E%3C/svg%3E'">
-                    <div class="certificate-school-name">${t.schoolName}</div>
-                    <div class="certificate-title">${t.certificate}</div>
+                    <div class="certificate-school-name">${schoolNameUrdu}</div>
+                    <div class="certificate-title">سکول چھوڑنے کا سرٹیفکیٹ</div>
                 </div>
                 <div class="certificate-body">
                     <div class="certificate-details">
-                        <p><strong>${t.studentName}:</strong> ${s.name}</p>
-                        <p><strong>${t.fatherNameLabel}:</strong> ${s.fatherName}</p>
-                        <p><strong>${t.admNoLabel}:</strong> ${s.admNo}</p>
-                        <p><strong>${t.class}:</strong> ${s.class}</p>
-                        <p><strong>${t.dobLabel}:</strong> ${formatDate(s.dob)}</p>
-                        <p><strong>${t.dobInWordsLabel}:</strong> ${dobInWords}</p>
-                        <p><strong>${t.issuedDate}:</strong> ${today}</p>
-                        <p><strong>${t.admissionDateLabel}:</strong> ${formatDate(s.admissionDate)}</p>
+                        <p><strong>نام:</strong> ${s.name}</p>
+                        <p><strong>والد کا نام:</strong> ${s.fatherName}</p>
+                        <p><strong>داخلہ نمبر:</strong> ${s.admNo}</p>
+                        <p><strong>موجودہ کلاس:</strong> ${s.class}</p>
+                        <p><strong>تاریخ پیدائش:</strong> ${formatDate(s.dob)}</p>
+                        <p><strong>تاریخ پیدائش (لفظی):</strong> ${dobInWords}</p>
+                        <p><strong>تاریخ داخلہ:</strong> ${formatDate(s.admissionDate)}</p>
+                        <p><strong>تاریخ اجرا:</strong> ${today}</p>
                     </div>
                     <div class="certificate-photo">
                         ${photoHtml}
                     </div>
                 </div>
-                <div class="certificate-footer">
-                    <div class="certificate-principal">
-                        <div class="principal-signature">${t.principal}</div>
-                        <div>_________________</div>
+                <div class="certificate-signatures">
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">دستخط (ریکارڈ انچارج)</div>
                     </div>
-                    <div class="certificate-school-footer">${t.schoolName}</div>
+                    <div class="center-school">${schoolNameUrdu}</div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">دستخط (پرنسپل)</div>
+                    </div>
                 </div>
             </div>
         `; 
@@ -1782,6 +1788,8 @@
                 max-width: 700px;
                 margin: 0 auto;
                 background: #fff;
+                direction: rtl;
+                text-align: right;
             }
             .certificate-header { text-align: center; margin-bottom: 20px; }
             .certificate-logo { width: 100px; height: auto; margin-bottom: 10px; }
@@ -1794,10 +1802,34 @@
             .certificate-photo { flex: 1; display: flex; justify-content: center; align-items: flex-start; }
             .certificate-photo img { width: 130px; height: 160px; object-fit: cover; border: 3px solid #2e7d32; border-radius: 15px; background: #f1f8e9; padding: 5px; }
             .certificate-photo .no-photo { width: 130px; height: 160px; border: 3px dashed #2e7d32; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: #f9fff9; color: #81c784; font-size: 3rem; }
-            .certificate-footer { text-align: center; margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-            .certificate-principal { text-align: center; width: 200px; }
-            .principal-signature { font-family: 'Segoe Script', 'cursive'; font-size: 1.5rem; color: #1b5e20; border-bottom: 1px solid #2e7d32; margin-bottom: 5px; }
-            .certificate-school-footer { font-size: 1.3rem; color: #006400; font-weight: bold; }
+            .certificate-signatures {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 40px;
+                align-items: flex-end;
+            }
+            .signature-box {
+                text-align: center;
+                width: 200px;
+            }
+            .signature-line {
+                border-bottom: 2px solid #2e7d32;
+                margin: 10px 0 5px;
+                height: 30px;
+                width: 100%;
+            }
+            .signature-label {
+                font-weight: bold;
+                color: #1b5e20;
+                font-size: 1rem;
+            }
+            .center-school {
+                text-align: center;
+                font-weight: bold;
+                font-size: 1.3rem;
+                color: #006400;
+                align-self: center;
+            }
         `);
         w.document.write('</style></head><body>');
         w.document.write(e('certificateContent').innerHTML);
@@ -1931,7 +1963,13 @@
         }; 
     });
 
-    setLanguage('en');
+    // Set Urdu as default language
+    setLanguage('ur');
+    // Ensure the UI reflects Urdu as active (already done via HTML classes, but just in case)
+    e('btnUrdu').classList.add('active');
+    e('btnEnglish').classList.remove('active');
+    e('loginBtnUrdu').classList.add('active');
+    e('loginBtnEnglish').classList.remove('active');
 </script>
 </body>
 </html>
