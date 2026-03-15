@@ -533,6 +533,7 @@
         .btn-outline:hover { background: #e8f5e9; }
         .btn-danger { background: #d32f2f; color: white; }
         .btn-info { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+        .btn-warning { background: #ff8f00; color: white; } /* for left button */
 
         .class-filter-section {
             background: #f1f8e9; border-radius: 24px; padding: 16px; margin-bottom: 16px; border: 1px solid #c8e6c9;
@@ -560,6 +561,34 @@
         .action-btn.thermal { background: #ff8f00; color: white; }
         .action-btn.edit { background: #ffb300; color: #1f2a0e; }
         .action-btn.delete { background: #d32f2f; color: white; }
+        .action-btn.pass { background: #2e7d32; color: white; }
+        .action-btn.fail { background: #b71c1c; color: white; }
+        .action-btn.left { background: #6c757d; color: white; } /* Left button */
+        .left-badge { background: #6c757d; color: white; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; margin-left: 8px; }
+        
+        /* Status filter buttons */
+        .status-filter {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        .status-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid #a5d6a7;
+            background: #f1f8e9;
+            color: #1b5e20;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .status-btn.active {
+            background: #2e7d32;
+            color: white;
+            border-color: #2e7d32;
+        }
         
         .bottom-nav { 
             background: #ffffff; padding: 12px 20px; display: flex; justify-content: space-around; 
@@ -917,6 +946,12 @@
                 <input type="text" id="searchInput" placeholder="🔍 Search students...">
                 <button class="btn btn-success" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Excel</button>
             </div>
+            <!-- Status filter: Current / All / Left -->
+            <div class="status-filter" id="statusFilter">
+                <button class="status-btn active" data-status="current">موجودہ</button>
+                <button class="status-btn" data-status="all">تمام</button>
+                <button class="status-btn" data-status="left">سابقہ</button>
+            </div>
             <div class="class-filter-section">
                 <div class="class-filter-title">
                     <span><i class="fas fa-filter"></i> <span id="filterTitle">Filter by Class</span></span>
@@ -981,6 +1016,7 @@
     let isUrdu = true;
     let isSubmitting = false;
     let selectedClass = 'all';
+    let selectedStatus = 'current'; // 'current', 'all', 'left'
     let cropper = null;
     let currentUser = null;
 
@@ -1015,6 +1051,12 @@
             thermal:"Thermal Print",
             edit:"Edit", 
             delete:"Delete", 
+            pass:"Pass", 
+            fail:"Fail",
+            left:"Left School",
+            current:"Current",
+            all:"All",
+            leftStatus:"Left",
             certificate:"Certificate of Enrollment", 
             thermalTitle:"تصدیقی سرٹیفیکٹ",
             issuedDate:"Issue Date", 
@@ -1052,7 +1094,12 @@
             loginError:"Invalid email or password",
             guestMode:"Guest Mode - Limited Access",
             emailRequired:"Please enter your email",
-            passwordRequired:"Please enter your password"
+            passwordRequired:"Please enter your password",
+            promoteConfirmPass:"Are you sure you want to mark this student as PASS and promote to next class?",
+            promoteConfirmFail:"Are you sure you want to mark this student as FAIL? (Class will remain same)",
+            maxClass:"This student is already in the highest class.",
+            leftConfirm:"Are you sure you want to mark this student as LEFT SCHOOL? (They will be moved to left records)",
+            alreadyLeft:"This student has already left school."
         },
         ur: { 
             schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
@@ -1076,6 +1123,12 @@
             thermal:"تھرمل پرنٹ",
             edit:"ترمیم", 
             delete:"حذف", 
+            pass:"پاس", 
+            fail:"فیل",
+            left:"سکول چھوڑ دیا",
+            current:"موجودہ",
+            all:"تمام",
+            leftStatus:"سابقہ",
             certificate:"داخلہ سرٹیفکیٹ", 
             thermalTitle:"تصدیقی سرٹیفیکٹ",
             issuedDate:"تاریخ اجراء", 
@@ -1113,7 +1166,12 @@
             loginError:"غلط ای میل یا پاس ورڈ",
             guestMode:"مہمان موڈ - محدود رسائی",
             emailRequired:"براہ کرم اپنا ای میل درج کریں",
-            passwordRequired:"براہ کرم اپنا پاس ورڈ درج کریں"
+            passwordRequired:"براہ کرم اپنا پاس ورڈ درج کریں",
+            promoteConfirmPass:"کیا آپ اس طالب علم کو پاس کر کے اگلی کلاس میں بھیجنا چاہتے ہیں؟",
+            promoteConfirmFail:"کیا آپ اس طالب علم کو فیل قرار دینا چاہتے ہیں؟ (کلاس وہی رہے گی)",
+            maxClass:"یہ طالب علم پہلے ہی آخری کلاس میں ہے۔",
+            leftConfirm:"کیا آپ اس طالب علم کو سکول چھوڑنے والا قرار دینا چاہتے ہیں؟ (یہ سابقہ طلباء میں شامل ہو جائے گا)",
+            alreadyLeft:"یہ طالب علم پہلے ہی سکول چھوڑ چکا ہے۔"
         }
     };
 
@@ -1243,6 +1301,14 @@
         if (e('filterTitle')) e('filterTitle').innerHTML = `<i class="fas fa-filter"></i> ${t.filterTitle}`;
         if (e('clearFilterText')) e('clearFilterText').textContent = t.clearFilter;
         
+        // Update status filter buttons text
+        const statusBtns = document.querySelectorAll('.status-btn');
+        if (statusBtns.length >= 3) {
+            statusBtns[0].textContent = t.current;
+            statusBtns[1].textContent = t.all;
+            statusBtns[2].textContent = t.leftStatus;
+        }
+        
         const selectClassOption = document.querySelector('#class option[value=""]');
         if (selectClassOption) selectClassOption.textContent = t.selectClass;
         
@@ -1293,6 +1359,16 @@
         e('btnEnglish').classList.remove('active'); 
         e('loginBtnUrdu').classList.add('active'); 
         e('loginBtnEnglish').classList.remove('active'); 
+    });
+
+    // Status filter event listeners
+    document.querySelectorAll('.status-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            selectedStatus = this.dataset.status;
+            renderList();
+        });
     });
 
     // ==================== تاریخ کی فارمیٹنگ (YYYY-MM-DD سے DD/MM/YYYY) ====================
@@ -1479,17 +1555,21 @@
     
     e('cancelCropBtn').addEventListener('click', () => { e('cropperModal').style.display = 'none'; if(cropper) { cropper.destroy(); cropper = null; } });
 
+    // Get counts for active students only
     function getClassCounts() { 
         const counts = {}; 
         classList.forEach(cls => counts[cls] = 0); 
-        students.forEach(s => { if (s.class && counts.hasOwnProperty(s.class)) counts[s.class]++; }); 
+        students.forEach(s => { 
+            // Only count active students
+            if (s.active !== false && s.class && counts.hasOwnProperty(s.class)) counts[s.class]++; 
+        }); 
         return counts; 
     }
     
     function renderClassFilter() { 
         const t = translations[isUrdu ? 'ur' : 'en']; 
         const counts = getClassCounts(); 
-        let html = `<div class="class-badge all-classes ${selectedClass === 'all' ? 'active' : ''}" onclick="filterByClass('all')"><i class="fas fa-users"></i> ${t.allClasses} <span class="count">${students.length}</span></div>`;
+        let html = `<div class="class-badge all-classes ${selectedClass === 'all' ? 'active' : ''}" onclick="filterByClass('all')"><i class="fas fa-users"></i> ${t.allClasses} <span class="count">${students.filter(s => s.active !== false).length}</span></div>`;
         classList.forEach(cls => { const count = counts[cls] || 0; if (count > 0 || selectedClass === cls) html += `<div class="class-badge ${selectedClass === cls ? 'active' : ''}" onclick="filterByClass('${cls}')">${cls} <span class="count">${count}</span></div>`; });
         e('classFilterBadges').innerHTML = html;
         let statsHtml = classList.map(cls => { const count = counts[cls] || 0; return count > 0 ? `<div class="class-stat-item"><div class="class-name">${cls}</div><div class="class-count">${count}</div></div>` : ''; }).join('');
@@ -1502,6 +1582,8 @@
     studentsRef.on('value', (snapshot) => { 
         const data = snapshot.val(); 
         students = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : []; 
+        // Ensure each student has an 'active' field (default true)
+        students.forEach(s => { if (s.active === undefined) s.active = true; });
         updateStats(); 
         renderClassFilter(); 
         renderList();
@@ -1509,8 +1591,10 @@
     });
     
     function updateStats() { 
-        e('totalStudents').textContent = students.length; 
-        const uniqueClasses = new Set(students.map(s => s.class).filter(Boolean)); 
+        // Count only active students
+        const activeStudents = students.filter(s => s.active !== false);
+        e('totalStudents').textContent = activeStudents.length; 
+        const uniqueClasses = new Set(activeStudents.map(s => s.class).filter(Boolean)); 
         e('totalClasses').textContent = uniqueClasses.size; 
     }
     
@@ -1541,7 +1625,7 @@
 
     function updateRotatingCard() {
         const className = classList[currentClassIndex];
-        const counts = getClassCounts();
+        const counts = getClassCounts(); // counts only active
         e('rotatingClassCount').textContent = counts[className] || 0;
         e('rotatingClassName').textContent = className;
     }
@@ -1549,6 +1633,56 @@
     function isDuplicateAdmissionNo(admNo, excludeId = null) {
         return students.some(s => s.admNo === admNo && (excludeId === null || s.id !== excludeId));
     }
+
+    // ========== Promotion Functions ==========
+    window.promoteStudent = async (id, passed) => {
+        const student = students.find(s => s.id === id);
+        if (!student) return;
+        const t = translations[isUrdu ? 'ur' : 'en'];
+        const currentClass = student.class;
+        const classIndex = classList.indexOf(currentClass);
+        
+        if (passed) {
+            // If passed, move to next class if not last
+            if (classIndex === classList.length - 1) {
+                showMessage(t.maxClass, false);
+                return;
+            }
+            const confirmMsg = t.promoteConfirmPass;
+            if (!confirm(confirmMsg)) return;
+            
+            const newClass = classList[classIndex + 1];
+            try {
+                await studentsRef.child(id).update({ class: newClass, updatedAt: new Date().toISOString() });
+                showMessage(`✅ ${student.name} ${t.pass} -> ${newClass}`, true);
+            } catch (error) {
+                showMessage('Error promoting student', false);
+            }
+        } else {
+            // If failed, keep same class
+            const confirmMsg = t.promoteConfirmFail;
+            if (!confirm(confirmMsg)) return;
+            showMessage(`ℹ️ ${student.name} ${t.fail} (${currentClass})`, true);
+        }
+    };
+
+    // ========== Left School Function ==========
+    window.markLeft = async (id) => {
+        const student = students.find(s => s.id === id);
+        if (!student) return;
+        const t = translations[isUrdu ? 'ur' : 'en'];
+        if (student.active === false) {
+            showMessage(t.alreadyLeft, false);
+            return;
+        }
+        if (!confirm(t.leftConfirm)) return;
+        try {
+            await studentsRef.child(id).update({ active: false, leftDate: new Date().toISOString(), updatedAt: new Date().toISOString() });
+            showMessage(`✅ ${student.name} ${t.left}`, true);
+        } catch (error) {
+            showMessage('Error marking left', false);
+        }
+    };
 
     function resetForm() { 
         e('studentForm').reset(); 
@@ -1848,7 +1982,8 @@
             'Phone': s.phone, 
             'DOB': formatDate(s.dob),
             'DOB in Words': s.dobInWords || '', 
-            'Admission Date': formatDate(s.admissionDate)
+            'Admission Date': formatDate(s.admissionDate),
+            'Status': s.active === false ? 'Left' : 'Current'
         })); 
         const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Students"); XLSX.writeFile(wb, `GMHSS_Students_${new Date().toISOString().slice(0,10)}.xlsx`); 
     };
@@ -1857,10 +1992,20 @@
         const term = e('searchInput').value.toLowerCase(); 
         const t = translations[isUrdu ? 'ur' : 'en']; 
         let filtered = students; 
+        // Apply status filter
+        if (selectedStatus === 'current') {
+            filtered = filtered.filter(s => s.active !== false);
+        } else if (selectedStatus === 'left') {
+            filtered = filtered.filter(s => s.active === false);
+        }
+        // Apply class filter
         if (selectedClass !== 'all') filtered = filtered.filter(s => s.class === selectedClass); 
+        // Apply search filter
         filtered = filtered.filter(s => s.name?.toLowerCase().includes(term) || s.admNo?.toLowerCase().includes(term) || s.fatherName?.toLowerCase().includes(term) || s.class?.toLowerCase().includes(term) || (s.caste && s.caste.toLowerCase().includes(term))); 
         if (filtered.length === 0) { e('studentList').innerHTML = `<div class="no-data"><i class="fas fa-search fa-2x"></i><p>${t.noStudents}</p></div>`; return; } 
-        e('studentList').innerHTML = filtered.map(s => `<div class="student-card"><div class="student-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-school fa-2x"></i>'}</div><div class="student-info"><div class="student-name">${s.name}</div><div class="student-details"><i class="fas fa-id-card"></i> ${t.class}: ${s.class} | <i class="fas fa-hashtag"></i> ${s.admNo} | <i class="fas fa-users"></i> ${s.caste || ''}</div><div class="student-contact"><i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}</div><div class="student-actions"><button class="action-btn print" onclick="printStudent('${s.id}')"><i class="fas fa-print"></i> ${t.print}</button><button class="action-btn thermal" onclick="thermalPrintStudent('${s.id}')"><i class="fas fa-print"></i> ${t.thermal}</button><button class="action-btn edit" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i> ${t.edit}</button><button class="action-btn delete" onclick="deleteMe('${s.id}')"><i class="fas fa-trash"></i> ${t.delete}</button></div></div></div>`).join(''); 
+        e('studentList').innerHTML = filtered.map(s => {
+            const leftBadge = s.active === false ? `<span class="left-badge">${t.leftStatus}</span>` : '';
+            return `<div class="student-card"><div class="student-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-school fa-2x"></i>'}</div><div class="student-info"><div class="student-name">${s.name} ${leftBadge}</div><div class="student-details"><i class="fas fa-id-card"></i> ${t.class}: ${s.class} | <i class="fas fa-hashtag"></i> ${s.admNo} | <i class="fas fa-users"></i> ${s.caste || ''}</div><div class="student-contact"><i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}</div><div class="student-actions"><button class="action-btn print" onclick="printStudent('${s.id}')"><i class="fas fa-print"></i> ${t.print}</button><button class="action-btn thermal" onclick="thermalPrintStudent('${s.id}')"><i class="fas fa-print"></i> ${t.thermal}</button><button class="action-btn edit" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i> ${t.edit}</button><button class="action-btn delete" onclick="deleteMe('${s.id}')"><i class="fas fa-trash"></i> ${t.delete}</button>${s.active !== false ? `<button class="action-btn pass" onclick="promoteStudent('${s.id}', true)"><i class="fas fa-check-circle"></i> ${t.pass}</button><button class="action-btn fail" onclick="promoteStudent('${s.id}', false)"><i class="fas fa-times-circle"></i> ${t.fail}</button><button class="action-btn left" onclick="markLeft('${s.id}')"><i class="fas fa-door-open"></i> ${t.left}</button>` : ''}</div></div></div>`}).join(''); 
     }
     e('searchInput').addEventListener('input', renderList);
 
@@ -1896,7 +2041,8 @@
                 admissionDate: e('admissionDate').value, 
                 photo: e('studentPhoto').src && !e('studentPhoto').classList.contains('hidden') ? e('studentPhoto').src : '', 
                 createdAt: new Date().toISOString(), 
-                updatedAt: new Date().toISOString() 
+                updatedAt: new Date().toISOString(),
+                active: true // new students are active by default
             };
             await studentsRef.push(data);
             showMessage(t.saved);
@@ -1940,6 +2086,8 @@
             };
             const originalStudent = students.find(s => s.id === currentId);
             if (originalStudent && originalStudent.createdAt) updatedData.createdAt = originalStudent.createdAt;
+            // Preserve active status
+            if (originalStudent && originalStudent.active !== undefined) updatedData.active = originalStudent.active;
             await studentsRef.child(currentId).update(updatedData);
             showMessage(t.updated);
             // Update lastSelectedClass to the class used in update
