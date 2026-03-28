@@ -730,15 +730,16 @@
             align-self: center;
         }
         
+        /* Thermal print style updated: left-aligned, no border */
         .thermal-certificate {
             font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Courier New', monospace;
             background: #fff;
-            border: 2px dashed #333;
-            padding: 20px;
+            padding: 10px;
             max-width: 300px;
-            margin: 0 auto;
+            width: 100%;
             box-shadow: none;
-            line-height: 1.8;
+            text-align: left;
+            margin: 0;
         }
         .thermal-header {
             text-align: center;
@@ -992,7 +993,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
-    const storage = firebase.storage(); // Firebase Storage
+    const storage = firebase.storage();
     const studentsRef = db.ref('students');
     const counterRef = db.ref('counter');
 
@@ -1014,8 +1015,7 @@
     let currentClassIndex = 0;
     let rotationInterval;
 
-    // For photo upload
-    let currentPhotoBlob = null; // will hold the cropped image blob
+    let currentPhotoBlob = null;
 
     const translations = {
         en: { 
@@ -1089,7 +1089,8 @@
             promoteConfirmFail:"Are you sure you want to mark this student as FAIL? (Class will remain same)",
             maxClass:"This student is already in the highest class.",
             leftConfirm:"Are you sure you want to mark this student as LEFT SCHOOL? (They will be moved to left records)",
-            alreadyLeft:"This student has already left school."
+            alreadyLeft:"This student has already left school.",
+            classNotFound:"Student's class is not recognized. Cannot promote."
         },
         ur: { 
             schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
@@ -1162,7 +1163,8 @@
             promoteConfirmFail:"کیا آپ اس طالب علم کو فیل قرار دینا چاہتے ہیں؟ (کلاس وہی رہے گی)",
             maxClass:"یہ طالب علم پہلے ہی آخری کلاس میں ہے۔",
             leftConfirm:"کیا آپ اس طالب علم کو سکول چھوڑنے والا قرار دینا چاہتے ہیں؟ (یہ سابقہ طلباء میں شامل ہو جائے گا)",
-            alreadyLeft:"یہ طالب علم پہلے ہی سکول چھوڑ چکا ہے۔"
+            alreadyLeft:"یہ طالب علم پہلے ہی سکول چھوڑ چکا ہے۔",
+            classNotFound:"طالب علم کی کلاس تسلیم نہیں ہوئی۔ پاس نہیں کیا جا سکتا۔"
         }
     };
 
@@ -1499,10 +1501,8 @@
     e('cropBtn').addEventListener('click', () => { 
         if (cropper) { 
             const canvas = cropper.getCroppedCanvas({ width: 300, height: 400 }); 
-            // Convert canvas to blob for upload
             canvas.toBlob((blob) => {
                 currentPhotoBlob = blob;
-                // Show preview
                 e('studentPhoto').src = canvas.toDataURL('image/jpeg');
                 e('defaultPhotoLogo').classList.add('hidden');
                 e('studentPhoto').classList.remove('hidden'); 
@@ -1515,14 +1515,11 @@
     
     e('cancelCropBtn').addEventListener('click', () => { e('cropperModal').style.display = 'none'; if(cropper) { cropper.destroy(); cropper = null; } });
 
-    // Upload photo to Firebase Storage and return download URL
     async function uploadPhoto(studentId, blob) {
         if (!blob) return null;
         const t = translations[isUrdu ? 'ur' : 'en'];
-        // Create a unique filename: studentId_timestamp.jpg
         const fileName = `students/${studentId}_${Date.now()}.jpg`;
         const storageRef = storage.ref().child(fileName);
-        // Show uploading message (optional)
         showMessage(t.uploading, true);
         try {
             const snapshot = await storageRef.put(blob);
@@ -1610,12 +1607,27 @@
         return students.some(s => s.admNo === admNo && (excludeId === null || s.id !== excludeId));
     }
 
+    // Fixed promoteStudent function with robust confirmation and update
     window.promoteStudent = async (id, passed) => {
         const student = students.find(s => s.id === id);
-        if (!student) return;
+        if (!student) {
+            showMessage("Student not found", false);
+            return;
+        }
+        // Check if student is still active (has not left)
+        if (student.active === false) {
+            showMessage("Cannot promote a student who has left school.", false);
+            return;
+        }
+
         const t = translations[isUrdu ? 'ur' : 'en'];
         const currentClass = student.class;
         const classIndex = classList.indexOf(currentClass);
+        
+        if (classIndex === -1) {
+            showMessage(t.classNotFound, false);
+            return;
+        }
         
         if (passed) {
             if (classIndex === classList.length - 1) {
@@ -1629,13 +1641,18 @@
             try {
                 await studentsRef.child(id).update({ class: newClass, updatedAt: new Date().toISOString() });
                 showMessage(`✅ ${student.name} ${t.pass} -> ${newClass}`, true);
+                // Force immediate UI refresh
+                renderList();
             } catch (error) {
-                showMessage('Error promoting student', false);
+                console.error('Promotion error:', error);
+                showMessage('Error promoting student: ' + error.message, false);
             }
         } else {
             const confirmMsg = t.promoteConfirmFail;
             if (!confirm(confirmMsg)) return;
+            // For fail, we just show a message, class remains same
             showMessage(`ℹ️ ${student.name} ${t.fail} (${currentClass})`, true);
+            // Optionally, we could update a "result" field, but not required
         }
     };
 
@@ -1690,7 +1707,6 @@
             e('studentPhoto').classList.remove('hidden'); 
             e('defaultPhotoLogo').classList.add('hidden');
             e('userIcon').classList.add('hidden'); 
-            // We don't have blob for existing photo, so set currentPhotoBlob to null (user can change)
             currentPhotoBlob = null;
         } else { 
             e('studentPhoto').classList.add('hidden'); 
@@ -1742,19 +1758,18 @@
                 font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Courier New', monospace;
                 background: #fff;
                 margin: 0;
-                padding: 10px;
+                padding: 0;
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start;
             }
             .thermal-certificate {
-                border: 2px dashed #333;
-                padding: 20px;
+                padding: 10px;
                 max-width: 300px;
                 width: 100%;
                 background: #fff;
                 box-shadow: none;
-                direction: rtl;
-                text-align: right;
+                text-align: left;
+                margin: 0;
             }
             .thermal-header {
                 text-align: center;
@@ -1789,12 +1804,22 @@
                 color: #000;
             }
             .thermal-value {
-                text-align: left;
+                text-align: right;
+            }
+            @media print {
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
+                .thermal-certificate {
+                    margin: 0;
+                    padding: 5px;
+                }
             }
         `);
         thermalWindow.document.write('</style></head><body>');
         thermalWindow.document.write(`
-            <div class="thermal-certificate" dir="rtl">
+            <div class="thermal-certificate" dir="ltr">
                 <div class="thermal-header">
                     <div class="thermal-school-name">${t.schoolName}</div>
                     <div class="thermal-title">${t.thermalTitle}</div>
@@ -1994,7 +2019,6 @@
         isSubmitting = true;
 
         try {
-            // First push student record without photo to get an ID
             const newStudentRef = studentsRef.push();
             const studentId = newStudentRef.key;
             
@@ -2016,7 +2040,7 @@
                 dob: e('dob').value, 
                 dobInWords, 
                 admissionDate: e('admissionDate').value, 
-                photo: photoUrl, // store URL
+                photo: photoUrl,
                 createdAt: new Date().toISOString(), 
                 updatedAt: new Date().toISOString(),
                 active: true
@@ -2047,7 +2071,6 @@
 
         try {
             let photoUrl = e('studentPhoto').src && !e('studentPhoto').classList.contains('hidden') ? e('studentPhoto').src : '';
-            // If user selected a new photo (currentPhotoBlob exists), upload it
             if (currentPhotoBlob) {
                 photoUrl = await uploadPhoto(currentId, currentPhotoBlob);
             }
