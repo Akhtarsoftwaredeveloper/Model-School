@@ -546,6 +546,9 @@
         .class-badge.active { background: #2e7d32; color: white; border-color: #2e7d32; }
         .class-badge .count { background: #c8e6c9; padding: 2px 6px; border-radius: 15px; font-size: 0.7rem; color:#1b5e20; }
         .class-badge.active .count { background: #81c784; color: #1b5e20; }
+        .section-filter-row { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .section-badge { background: #e8f5e9; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; border: 1px solid #a5d6a7; }
+        .section-badge.active { background: #2e7d32; color: white; }
         
         .student-card { 
             background: #ffffff; border-radius: 24px; padding: 16px; margin-bottom: 12px; 
@@ -604,11 +607,12 @@
         .search-export input::placeholder { color: #a5d6a7; }
         .search-export button { width: auto; padding: 0 20px; margin-top: 0; }
 
-        .class-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 8px; margin: 15px 0; }
+        .class-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin: 15px 0; }
         .class-stat-item { background: #f1f8e9; padding: 10px 5px; border-radius: 20px; text-align: center; border: 1px solid #c8e6c9; }
         .class-stat-item .class-name { font-weight: 600; color: #1b5e20; font-size: 0.75rem; }
         .class-stat-item .class-count { font-size: 1.2rem; font-weight: 700; color: #2e7d32; }
-
+        .section-stats { display: flex; justify-content: center; gap: 10px; margin-top: 5px; font-size: 0.7rem; }
+        
         .cropper-modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,30,0,0.9); display: none; justify-content: center; align-items: center; z-index: 3000; }
         .cropper-container { background: #ffffff; padding: 20px; border-radius: 30px; width: 90%; max-width: 400px; border: 3px solid #2e7d32; }
         .cropper-container h3 { color: #1b5e20; }
@@ -730,7 +734,6 @@
             align-self: center;
         }
         
-        /* Thermal print style updated: left-aligned, no border */
         .thermal-certificate {
             font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Courier New', monospace;
             background: #fff;
@@ -915,6 +918,15 @@
                     </select>
                 </div>
                 
+                <div class="form-group" id="sectionGroup" style="display: none;">
+                    <select id="section">
+                        <option value="">Select Section</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                
                 <input type="text" id="fatherName" placeholder="Father's Name" required class="form-group" lang="ur" inputmode="text">
                 <input type="text" id="caste" placeholder="Caste/Tribe" required class="form-group" lang="ur" inputmode="text">
                 <input type="tel" id="phone" placeholder="Phone Number" required class="form-group">
@@ -946,6 +958,7 @@
                     <button class="btn btn-info" id="clearFilterBtn" style="width: auto; padding: 6px 15px; margin: 0;"><i class="fas fa-times"></i> <span id="clearFilterText">Clear</span></button>
                 </div>
                 <div class="class-filter-badges" id="classFilterBadges"></div>
+                <div id="sectionFilterRow" class="section-filter-row" style="display: none;"></div>
             </div>
             <div class="class-stats" id="classStats"></div>
             <div id="studentList"></div>
@@ -1004,13 +1017,17 @@
     let isUrdu = true;
     let isSubmitting = false;
     let selectedClass = 'all';
+    let selectedSection = '';
     let selectedStatus = 'current';
     let cropper = null;
     let currentUser = null;
 
     let lastSelectedClass = '';
+    let lastSelectedSection = '';
 
     const classList = ['کچی','پکی','دوئم','سوئم','چہارم','پنجم','ششم','ہفتم','ہشتم','نہم','دہم','فرسٹ ائیر','سیکنڈ ائیر'];
+    const sectionsWithClasses = ['ششم','ہفتم','ہشتم','نہم','دہم'];
+    const sectionOptions = ['A','B','C'];
 
     let currentClassIndex = 0;
     let rotationInterval;
@@ -1090,7 +1107,8 @@
             maxClass:"This student is already in the highest class.",
             leftConfirm:"Are you sure you want to mark this student as LEFT SCHOOL? (They will be moved to left records)",
             alreadyLeft:"This student has already left school.",
-            classNotFound:"Student's class is not recognized. Cannot promote."
+            classNotFound:"Student's class is not recognized. Cannot promote.",
+            section:"Section"
         },
         ur: { 
             schoolName:"گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین", 
@@ -1164,7 +1182,8 @@
             maxClass:"یہ طالب علم پہلے ہی آخری کلاس میں ہے۔",
             leftConfirm:"کیا آپ اس طالب علم کو سکول چھوڑنے والا قرار دینا چاہتے ہیں؟ (یہ سابقہ طلباء میں شامل ہو جائے گا)",
             alreadyLeft:"یہ طالب علم پہلے ہی سکول چھوڑ چکا ہے۔",
-            classNotFound:"طالب علم کی کلاس تسلیم نہیں ہوئی۔ پاس نہیں کیا جا سکتا۔"
+            classNotFound:"طالب علم کی کلاس تسلیم نہیں ہوئی۔ پاس نہیں کیا جا سکتا۔",
+            section:"سیکشن"
         }
     };
 
@@ -1541,18 +1560,71 @@
         return counts; 
     }
     
+    function getSectionCounts(className) {
+        const secCounts = { 'A':0, 'B':0, 'C':0 };
+        students.forEach(s => {
+            if (s.active !== false && s.class === className && s.section && secCounts.hasOwnProperty(s.section)) secCounts[s.section]++;
+        });
+        return secCounts;
+    }
+    
+    function toggleSectionField() {
+        const selectedClass = e('class').value;
+        const sectionGroup = e('sectionGroup');
+        const sectionSelect = e('section');
+        if (sectionsWithClasses.includes(selectedClass)) {
+            sectionGroup.style.display = 'block';
+            if (!sectionSelect.value) sectionSelect.value = 'A';
+        } else {
+            sectionGroup.style.display = 'none';
+            sectionSelect.value = '';
+        }
+    }
+    
+    e('class').addEventListener('change', toggleSectionField);
+    
     function renderClassFilter() { 
         const t = translations[isUrdu ? 'ur' : 'en']; 
         const counts = getClassCounts(); 
-        let html = `<div class="class-badge all-classes ${selectedClass === 'all' ? 'active' : ''}" onclick="filterByClass('all')"><i class="fas fa-users"></i> ${t.allClasses} <span class="count">${students.filter(s => s.active !== false).length}</span></div>`;
+        let html = `<div class="class-badge ${selectedClass === 'all' ? 'active' : ''}" onclick="filterByClass('all')"><i class="fas fa-users"></i> ${t.allClasses} <span class="count">${students.filter(s => s.active !== false).length}</span></div>`;
         classList.forEach(cls => { const count = counts[cls] || 0; if (count > 0 || selectedClass === cls) html += `<div class="class-badge ${selectedClass === cls ? 'active' : ''}" onclick="filterByClass('${cls}')">${cls} <span class="count">${count}</span></div>`; });
         e('classFilterBadges').innerHTML = html;
-        let statsHtml = classList.map(cls => { const count = counts[cls] || 0; return count > 0 ? `<div class="class-stat-item"><div class="class-name">${cls}</div><div class="class-count">${count}</div></div>` : ''; }).join('');
+        
+        // Section filter row
+        const sectionRow = e('sectionFilterRow');
+        if (selectedClass !== 'all' && sectionsWithClasses.includes(selectedClass)) {
+            const secCounts = getSectionCounts(selectedClass);
+            let secHtml = `<span style="font-weight:600; margin-right:8px;">${t.section}:</span>`;
+            secHtml += `<div class="section-badge ${selectedSection === '' ? 'active' : ''}" onclick="filterBySection('')">${t.allClasses}</div>`;
+            sectionOptions.forEach(sec => {
+                secHtml += `<div class="section-badge ${selectedSection === sec ? 'active' : ''}" onclick="filterBySection('${sec}')">${sec} <span class="count">(${secCounts[sec]})</span></div>`;
+            });
+            sectionRow.innerHTML = secHtml;
+            sectionRow.style.display = 'flex';
+        } else {
+            sectionRow.style.display = 'none';
+            selectedSection = '';
+        }
+        
+        // Class stats with sections
+        let statsHtml = '';
+        classList.forEach(cls => {
+            const count = counts[cls] || 0;
+            if (count > 0) {
+                let sectionHtml = '';
+                if (sectionsWithClasses.includes(cls)) {
+                    const secCounts = getSectionCounts(cls);
+                    sectionHtml = `<div class="section-stats">${sectionOptions.map(sec => `<span>${sec}: ${secCounts[sec]}</span>`).join(' | ')}</div>`;
+                }
+                statsHtml += `<div class="class-stat-item"><div class="class-name">${cls}</div><div class="class-count">${count}</div>${sectionHtml}</div>`;
+            }
+        });
         e('classStats').innerHTML = statsHtml || '<div class="no-data">📊 No students</div>';
     }
     
-    window.filterByClass = (className) => { selectedClass = className; renderClassFilter(); renderList(); };
-    e('clearFilterBtn').onclick = () => { selectedClass = 'all'; renderClassFilter(); renderList(); };
+    window.filterByClass = (className) => { selectedClass = className; selectedSection = ''; renderClassFilter(); renderList(); };
+    window.filterBySection = (section) => { selectedSection = section; renderList(); renderClassFilter(); };
+    e('clearFilterBtn').onclick = () => { selectedClass = 'all'; selectedSection = ''; renderClassFilter(); renderList(); };
 
     studentsRef.on('value', (snapshot) => { 
         const data = snapshot.val(); 
@@ -1607,14 +1679,12 @@
         return students.some(s => s.admNo === admNo && (excludeId === null || s.id !== excludeId));
     }
 
-    // Fixed promoteStudent function with robust confirmation and update
     window.promoteStudent = async (id, passed) => {
         const student = students.find(s => s.id === id);
         if (!student) {
             showMessage("Student not found", false);
             return;
         }
-        // Check if student is still active (has not left)
         if (student.active === false) {
             showMessage("Cannot promote a student who has left school.", false);
             return;
@@ -1638,10 +1708,15 @@
             if (!confirm(confirmMsg)) return;
             
             const newClass = classList[classIndex + 1];
+            let updateData = { class: newClass, updatedAt: new Date().toISOString() };
+            if (sectionsWithClasses.includes(newClass)) {
+                updateData.section = 'A';
+            } else {
+                updateData.section = null;
+            }
             try {
-                await studentsRef.child(id).update({ class: newClass, updatedAt: new Date().toISOString() });
+                await studentsRef.child(id).update(updateData);
                 showMessage(`✅ ${student.name} ${t.pass} -> ${newClass}`, true);
-                // Force immediate UI refresh
                 renderList();
             } catch (error) {
                 console.error('Promotion error:', error);
@@ -1650,9 +1725,7 @@
         } else {
             const confirmMsg = t.promoteConfirmFail;
             if (!confirm(confirmMsg)) return;
-            // For fail, we just show a message, class remains same
             showMessage(`ℹ️ ${student.name} ${t.fail} (${currentClass})`, true);
-            // Optionally, we could update a "result" field, but not required
         }
     };
 
@@ -1680,12 +1753,16 @@
         e('userIcon').classList.add('hidden'); 
         e('studentPhoto').src = ''; 
         e('dobInWords').value = '';
+        e('section').value = '';
+        e('sectionGroup').style.display = 'none';
         currentId = null; 
         e('saveBtn').classList.remove('hidden'); 
         e('updateBtn').classList.add('hidden'); 
         setAutoAdmissionDate(); 
         if (lastSelectedClass) {
             e('class').value = lastSelectedClass;
+            toggleSectionField();
+            if (lastSelectedSection) e('section').value = lastSelectedSection;
         }
         currentPhotoBlob = null;
     }
@@ -1696,6 +1773,8 @@
         e('admNo').value = s.admNo || ''; 
         e('name').value = s.name || ''; 
         e('class').value = s.class || ''; 
+        toggleSectionField();
+        if (s.section && sectionsWithClasses.includes(s.class)) e('section').value = s.section;
         e('fatherName').value = s.fatherName || ''; 
         e('caste').value = s.caste || '';
         e('phone').value = s.phone || ''; 
@@ -1715,6 +1794,7 @@
             currentPhotoBlob = null;
         }
         lastSelectedClass = s.class || '';
+        lastSelectedSection = s.section || '';
         e('saveBtn').classList.add('hidden'); e('updateBtn').classList.remove('hidden'); 
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); 
         e('addPanel').classList.add('active'); 
@@ -1738,6 +1818,7 @@
         const t = translations[isUrdu ? 'ur' : 'en'];
         const today = formatDate(new Date().toISOString().split('T')[0]);
         const dobInWords = s.dobInWords || dateToWords(s.dob) || '';
+        const sectionDisplay = s.section ? ` (${s.section})` : '';
         
         const thermalWindow = window.open('', '_blank');
         thermalWindow.document.write('<html><head><title>Thermal Certificate</title>');
@@ -1828,7 +1909,7 @@
                     <div class="thermal-row"><span class="thermal-label">${t.studentName}:</span><span class="thermal-value">${s.name}</span></div>
                     <div class="thermal-row"><span class="thermal-label">${t.fatherNameLabel}:</span><span class="thermal-value">${s.fatherName}</span></div>
                     <div class="thermal-row"><span class="thermal-label">${t.admNoLabel}:</span><span class="thermal-value">${s.admNo}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.class}:</span><span class="thermal-value">${s.class}</span></div>
+                    <div class="thermal-row"><span class="thermal-label">${t.class}:</span><span class="thermal-value">${s.class}${sectionDisplay}</span></div>
                     <div class="thermal-row"><span class="thermal-label">${t.dobLabel}:</span><span class="thermal-value">${formatDate(s.dob)}</span></div>
                     <div class="thermal-row"><span class="thermal-label">${t.dobInWordsLabel}:</span><span class="thermal-value">${dobInWords}</span></div>
                     <div class="thermal-row"><span class="thermal-label">${t.phoneLabel}:</span><span class="thermal-value">${s.phone}</span></div>
@@ -1848,7 +1929,7 @@
         const photoHtml = s.photo ? 
             `<img src="${s.photo}" alt="Student Photo">` : 
             `<div class="no-photo"><i class="fas fa-user-graduate"></i></div>`;
-        
+        const sectionDisplay = s.section ? ` (${s.section})` : '';
         const schoolNameUrdu = "گورنمنٹ ماڈل ہائیر سکینڈری سکول پشین";
         
         const html = `
@@ -1863,7 +1944,7 @@
                         <p><strong>نام:</strong> ${s.name}</p>
                         <p><strong>والد کا نام:</strong> ${s.fatherName}</p>
                         <p><strong>داخلہ نمبر:</strong> ${s.admNo}</p>
-                        <p><strong>موجودہ کلاس:</strong> ${s.class}</p>
+                        <p><strong>موجودہ کلاس:</strong> ${s.class}${sectionDisplay}</p>
                         <p><strong>تاریخ پیدائش:</strong> ${formatDate(s.dob)}</p>
                         <p><strong>تاریخ پیدائش (لفظی):</strong> ${dobInWords}</p>
                         <p><strong>تاریخ داخلہ:</strong> ${formatDate(s.admissionDate)}</p>
@@ -1971,7 +2052,8 @@
         const data = students.map(s => ({ 
             'Admission No': s.admNo, 
             'Name': s.name, 
-            'Class': s.class, 
+            'Class': s.class,
+            'Section': s.section || '',
             "Father's Name": s.fatherName,
             "Caste/Tribe": s.caste || '',
             'Phone': s.phone, 
@@ -1992,12 +2074,14 @@
         } else if (selectedStatus === 'left') {
             filtered = filtered.filter(s => s.active === false);
         }
-        if (selectedClass !== 'all') filtered = filtered.filter(s => s.class === selectedClass); 
+        if (selectedClass !== 'all') filtered = filtered.filter(s => s.class === selectedClass);
+        if (selectedSection) filtered = filtered.filter(s => s.section === selectedSection);
         filtered = filtered.filter(s => s.name?.toLowerCase().includes(term) || s.admNo?.toLowerCase().includes(term) || s.fatherName?.toLowerCase().includes(term) || s.class?.toLowerCase().includes(term) || (s.caste && s.caste.toLowerCase().includes(term))); 
         if (filtered.length === 0) { e('studentList').innerHTML = `<div class="no-data"><i class="fas fa-search fa-2x"></i><p>${t.noStudents}</p></div>`; return; } 
         e('studentList').innerHTML = filtered.map(s => {
             const leftBadge = s.active === false ? `<span class="left-badge">${t.leftStatus}</span>` : '';
-            return `<div class="student-card"><div class="student-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-school fa-2x"></i>'}</div><div class="student-info"><div class="student-name">${s.name} ${leftBadge}</div><div class="student-details"><i class="fas fa-id-card"></i> ${t.class}: ${s.class} | <i class="fas fa-hashtag"></i> ${s.admNo} | <i class="fas fa-users"></i> ${s.caste || ''}</div><div class="student-contact"><i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}</div><div class="student-actions"><button class="action-btn print" onclick="printStudent('${s.id}')"><i class="fas fa-print"></i> ${t.print}</button><button class="action-btn thermal" onclick="thermalPrintStudent('${s.id}')"><i class="fas fa-print"></i> ${t.thermal}</button><button class="action-btn edit" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i> ${t.edit}</button><button class="action-btn delete" onclick="deleteMe('${s.id}')"><i class="fas fa-trash"></i> ${t.delete}</button>${s.active !== false ? `<button class="action-btn pass" onclick="promoteStudent('${s.id}', true)"><i class="fas fa-check-circle"></i> ${t.pass}</button><button class="action-btn fail" onclick="promoteStudent('${s.id}', false)"><i class="fas fa-times-circle"></i> ${t.fail}</button><button class="action-btn left" onclick="markLeft('${s.id}')"><i class="fas fa-door-open"></i> ${t.left}</button>` : ''}</div></div></div>`}).join(''); 
+            const sectionDisplay = s.section ? ` | ${t.section}: ${s.section}` : '';
+            return `<div class="student-card"><div class="student-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-school fa-2x"></i>'}</div><div class="student-info"><div class="student-name">${s.name} ${leftBadge}</div><div class="student-details"><i class="fas fa-id-card"></i> ${t.class}: ${s.class}${sectionDisplay} | <i class="fas fa-hashtag"></i> ${s.admNo} | <i class="fas fa-users"></i> ${s.caste || ''}</div><div class="student-contact"><i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}</div><div class="student-actions"><button class="action-btn print" onclick="printStudent('${s.id}')"><i class="fas fa-print"></i> ${t.print}</button><button class="action-btn thermal" onclick="thermalPrintStudent('${s.id}')"><i class="fas fa-print"></i> ${t.thermal}</button><button class="action-btn edit" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i> ${t.edit}</button><button class="action-btn delete" onclick="deleteMe('${s.id}')"><i class="fas fa-trash"></i> ${t.delete}</button>${s.active !== false ? `<button class="action-btn pass" onclick="promoteStudent('${s.id}', true)"><i class="fas fa-check-circle"></i> ${t.pass}</button><button class="action-btn fail" onclick="promoteStudent('${s.id}', false)"><i class="fas fa-times-circle"></i> ${t.fail}</button><button class="action-btn left" onclick="markLeft('${s.id}')"><i class="fas fa-door-open"></i> ${t.left}</button>` : ''}</div></div></div>`}).join(''); 
     }
     e('searchInput').addEventListener('input', renderList);
 
@@ -2011,6 +2095,8 @@
         if (isSubmitting) return;
         const t = translations[isUrdu ? 'ur' : 'en'];
         if (!e('name').value || !e('class').value || !e('fatherName').value || !e('caste').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) { showMessage(t.fillAllFields, false); return; }
+        const selectedClassValue = e('class').value;
+        if (sectionsWithClasses.includes(selectedClassValue) && !e('section').value) { showMessage(`Please select section for class ${selectedClassValue}`, false); return; }
         const admNo = e('admNo').value.trim();
         if (!admNo) { showMessage('Admission number is required', false); return; }
         if (isDuplicateAdmissionNo(admNo)) { showMessage(t.duplicateAdmNo, false); return; }
@@ -2033,7 +2119,8 @@
             const data = { 
                 admNo, 
                 name: e('name').value, 
-                class: e('class').value, 
+                class: selectedClassValue,
+                section: sectionsWithClasses.includes(selectedClassValue) ? e('section').value : null,
                 fatherName: e('fatherName').value, 
                 caste: e('caste').value,
                 phone: e('phone').value, 
@@ -2047,7 +2134,8 @@
             };
             await newStudentRef.set(data);
             showMessage(t.saved);
-            lastSelectedClass = e('class').value;
+            lastSelectedClass = selectedClassValue;
+            lastSelectedSection = e('section').value;
             resetForm();
         } catch (error) { showMessage('Error: ' + error.message, false); } finally {
             e('saveBtn').disabled = false;
@@ -2061,6 +2149,8 @@
         if (!currentId) { showMessage('No record selected for update', false); return; }
         const t = translations[isUrdu ? 'ur' : 'en'];
         if (!e('name').value || !e('class').value || !e('fatherName').value || !e('caste').value || !e('phone').value || !e('dob').value || !e('admissionDate').value) { showMessage(t.fillAllFields, false); return; }
+        const selectedClassValue = e('class').value;
+        if (sectionsWithClasses.includes(selectedClassValue) && !e('section').value) { showMessage(`Please select section for class ${selectedClassValue}`, false); return; }
         const admNo = e('admNo').value.trim();
         if (!admNo) { showMessage('Admission number is required', false); return; }
         if (isDuplicateAdmissionNo(admNo, currentId)) { showMessage(t.duplicateAdmNo, false); return; }
@@ -2081,7 +2171,8 @@
             const updatedData = { 
                 admNo, 
                 name: e('name').value, 
-                class: e('class').value, 
+                class: selectedClassValue,
+                section: sectionsWithClasses.includes(selectedClassValue) ? e('section').value : null,
                 fatherName: e('fatherName').value, 
                 caste: e('caste').value,
                 phone: e('phone').value, 
@@ -2097,7 +2188,8 @@
             
             await studentsRef.child(currentId).update(updatedData);
             showMessage(t.updated);
-            lastSelectedClass = e('class').value;
+            lastSelectedClass = selectedClassValue;
+            lastSelectedSection = e('section').value;
             resetForm();
         } catch (error) { showMessage('Error updating record: ' + error.message, false); } finally {
             e('updateBtn').disabled = false;
