@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>GMHSS Pishin - Login</title>
-    <!-- Google Fonts for Noto Nastaliq Urdu and Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     
-    <!-- Firebase SDK (including Storage) -->
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"></script>
@@ -624,162 +622,32 @@
         .certificate-modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,30,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .certificate-content { background: #ffffff; padding: 25px; border-radius: 30px; max-width: 800px; width: 90%; max-height: 85vh; overflow-y: auto; border: 3px solid #2e7d32; }
         
-        .professional-certificate {
-            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Arial', sans-serif;
-            background: #fff;
-            border: 12px double #2e7d32;
-            padding: 30px 25px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(0,80,0,0.2);
-            max-width: 700px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .certificate-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .certificate-logo {
-            width: 100px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        .certificate-school-name {
-            font-size: 2.5rem;
-            color: #006400;
-            font-weight: bold;
-            line-height: 1.3;
-        }
-        .certificate-title {
-            font-size: 2rem;
-            color: #2e7d32;
-            border-bottom: 2px solid #a5d6a7;
-            display: inline-block;
-            padding-bottom: 5px;
-            margin: 15px 0 25px;
-            letter-spacing: 2px;
-        }
-        .certificate-body {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .certificate-details {
-            flex: 2;
-            font-size: 1.2rem;
-            line-height: 2;
-        }
-        .certificate-details p {
-            margin: 10px 0;
-            display: flex;
-            align-items: baseline;
-        }
-        .certificate-details strong {
-            min-width: 140px;
-            color: #1b5e20;
-        }
-        .certificate-photo {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-        .certificate-photo img {
-            width: 130px;
-            height: 160px;
-            object-fit: cover;
-            border: 3px solid #2e7d32;
-            border-radius: 15px;
-            background: #f1f8e9;
-            padding: 5px;
-        }
-        .certificate-photo .no-photo {
-            width: 130px;
-            height: 160px;
-            border: 3px dashed #2e7d32;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f9fff9;
-            color: #81c784;
-            font-size: 3rem;
-        }
-        .certificate-signatures {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-            align-items: flex-end;
-        }
-        .signature-box {
-            text-align: center;
-            width: 200px;
-        }
-        .signature-line {
-            border-bottom: 2px solid #2e7d32;
-            margin: 10px 0 5px;
-            height: 30px;
-            width: 100%;
-        }
-        .signature-label {
-            font-weight: bold;
-            color: #1b5e20;
-            font-size: 1rem;
-        }
-        .center-school {
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.3rem;
-            color: #006400;
-            align-self: center;
-        }
-        
-        .thermal-certificate {
-            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Courier New', monospace;
-            background: #fff;
-            padding: 10px;
-            max-width: 300px;
-            width: 100%;
-            box-shadow: none;
-            text-align: left;
-            margin: 0;
-        }
-        .thermal-header {
-            text-align: center;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        .thermal-school-name {
-            font-size: 1.8rem;
-            font-weight: bold;
+        /* Compact Receipt Design for 58mm Share */
+        .receipt-share-container {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 220px; /* ~58mm width */
+            background: #ffffff;
+            padding: 8px;
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif;
             color: #000;
-        }
-        .thermal-title {
-            font-size: 1.5rem;
-            border: 1px dashed #333;
-            display: inline-block;
-            padding: 5px 15px;
-            margin: 10px 0;
-            letter-spacing: 1px;
-        }
-        .thermal-details {
-            font-size: 1.1rem;
-        }
-        .thermal-row {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dashed #ccc;
-            padding: 5px 0;
-        }
-        .thermal-label {
-            font-weight: bold;
-            color: #000;
-        }
-        .thermal-value {
+            direction: rtl;
             text-align: right;
+            box-sizing: border-box;
+            border: 1px solid #000;
         }
-        .close-modal { color: #2e7d32; float: right; cursor: pointer; font-size: 1.5rem; }
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+        }
+        .receipt-title { font-size: 1.1rem; font-weight: bold; line-height: 1.4; }
+        .receipt-subtitle { font-size: 0.9rem; margin-top: 3px; }
+        .receipt-body { font-size: 0.85rem; line-height: 1.8; }
+        .receipt-row { display: flex; justify-content: space-between; border-bottom: 1px dotted #ccc; padding: 3px 0; }
+        .receipt-label { font-weight: bold; }
 
         .no-data { text-align: center; padding: 40px; color: #81c784; background: #f1f8e9; border-radius: 28px; }
         .success-message { background: #2e7d32; color: white; border-radius: 30px; padding: 14px; text-align: center; margin:10px 0; animation: slideIn 0.3s, fadeOut 3s forwards; }
@@ -914,7 +782,7 @@
                         <option value="نہم">نہم</option>
                         <option value="دہم">دہم</option>
                         <option value="فرسٹ ائیر"> فرسٹ ائیر </option>
-                        <option value="سیکنڈ ائیر">سکینڈ ائیر</option>
+                        <option value="سیکنڈ ائیر">سیکنڈ ائیر</option>
                     </select>
                 </div>
                 
@@ -1026,7 +894,8 @@
     let lastSelectedSection = '';
 
     const classList = ['کچی','پکی','دوئم','سوئم','چہارم','پنجم','ششم','ہفتم','ہشتم','نہم','دہم','فرسٹ ائیر','سیکنڈ ائیر'];
-    const sectionsWithClasses = ['ششم','ہفتم','ہشتم','نہم','دہم'];
+    // Update to include 1st and 2nd year for sections
+    const sectionsWithClasses = ['ششم','ہفتم','ہشتم','نہم','دہم','فرسٹ ائیر','سیکنڈ ائیر'];
     const sectionOptions = ['A','B','C'];
 
     let currentClassIndex = 0;
@@ -1054,7 +923,7 @@
             home:"Home", 
             students:"Students", 
             print:"Print", 
-            thermal:"Thermal Print",
+            thermal:"Share Info", // Changed from Thermal Print
             edit:"Edit", 
             delete:"Delete", 
             pass:"Pass", 
@@ -1129,7 +998,7 @@
             home:"ہوم", 
             students:"طلباء", 
             print:"پرنٹ", 
-            thermal:"تھرمل پرنٹ",
+            thermal:"شیئر کریں", // Changed from Thermal Print
             edit:"ترمیم", 
             delete:"حذف", 
             pass:"پاس", 
@@ -1812,115 +1681,77 @@
     
     window.printStudent = (id) => { const s = students.find(x => x.id === id); if(s) generateCertificate(s); };
     
-    window.thermalPrintStudent = (id) => {
+    // --- New Share Function (Replaces Thermal Print) ---
+    window.shareStudentInfo = async (id) => {
         const s = students.find(x => x.id === id);
         if(!s) return;
         const t = translations[isUrdu ? 'ur' : 'en'];
-        const today = formatDate(new Date().toISOString().split('T')[0]);
         const dobInWords = s.dobInWords || dateToWords(s.dob) || '';
         const sectionDisplay = s.section ? ` (${s.section})` : '';
         
-        const thermalWindow = window.open('', '_blank');
-        thermalWindow.document.write('<html><head><title>Thermal Certificate</title>');
-        thermalWindow.document.write('<link rel="preconnect" href="https://fonts.googleapis.com">');
-        thermalWindow.document.write('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>');
-        thermalWindow.document.write('<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">');
-        thermalWindow.document.write('<style>');
-        thermalWindow.document.write(`
-            @font-face {
-                font-family: 'Jameel Noori Nastaleeq';
-                src: url('https://fonts.jameelnoori.com/jameel-noori-nastaleeq.woff2') format('woff2'),
-                     url('https://fonts.jameelnoori.com/jameel-noori-nastaleeq.woff') format('woff'),
-                     url('https://cdn.jsdelivr.net/gh/akeelali/jameel-noori-nastaleeq@main/Jameel-Noori-Nastaleeq.ttf') format('truetype');
-                font-weight: normal;
-                font-style: normal;
-            }
-            body {
-                font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Courier New', monospace;
-                background: #fff;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: flex-start;
-            }
-            .thermal-certificate {
-                padding: 10px;
-                max-width: 300px;
-                width: 100%;
-                background: #fff;
-                box-shadow: none;
-                text-align: left;
-                margin: 0;
-            }
-            .thermal-header {
-                text-align: center;
-                border-bottom: 1px dashed #333;
-                padding-bottom: 10px;
-                margin-bottom: 15px;
-            }
-            .thermal-school-name {
-                font-size: 1.8rem;
-                font-weight: bold;
-                color: #000;
-            }
-            .thermal-title {
-                font-size: 1.5rem;
-                border: 1px dashed #333;
-                display: inline-block;
-                padding: 5px 15px;
-                margin: 10px 0;
-                letter-spacing: 1px;
-            }
-            .thermal-details {
-                font-size: 1.1rem;
-            }
-            .thermal-row {
-                display: flex;
-                justify-content: space-between;
-                border-bottom: 1px dashed #ccc;
-                padding: 5px 0;
-            }
-            .thermal-label {
-                font-weight: bold;
-                color: #000;
-            }
-            .thermal-value {
-                text-align: right;
-            }
-            @media print {
-                body {
-                    margin: 0;
-                    padding: 0;
-                }
-                .thermal-certificate {
-                    margin: 0;
-                    padding: 5px;
-                }
-            }
-        `);
-        thermalWindow.document.write('</style></head><body>');
-        thermalWindow.document.write(`
-            <div class="thermal-certificate" dir="ltr">
-                <div class="thermal-header">
-                    <div class="thermal-school-name">${t.schoolName}</div>
-                    <div class="thermal-title">${t.thermalTitle}</div>
-                </div>
-                <div class="thermal-details">
-                    <div class="thermal-row"><span class="thermal-label">${t.studentName}:</span><span class="thermal-value">${s.name}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.fatherNameLabel}:</span><span class="thermal-value">${s.fatherName}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.admNoLabel}:</span><span class="thermal-value">${s.admNo}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.class}:</span><span class="thermal-value">${s.class}${sectionDisplay}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.dobLabel}:</span><span class="thermal-value">${formatDate(s.dob)}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.dobInWordsLabel}:</span><span class="thermal-value">${dobInWords}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.phoneLabel}:</span><span class="thermal-value">${s.phone}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.admissionDateLabel}:</span><span class="thermal-value">${formatDate(s.admissionDate)}</span></div>
-                    <div class="thermal-row"><span class="thermal-label">${t.issuedDate}:</span><span class="thermal-value">${today}</span></div>
-                </div>
+        // Show loading message
+        showMessage(isUrdu ? 'تصویر بنائی جا رہی ہے...' : 'Generating image...', true);
+
+        // Create virtual container for snapshot (Compact 58mm style)
+        const container = document.createElement('div');
+        container.className = 'receipt-share-container';
+        
+        container.innerHTML = `
+            <div class="receipt-header">
+                <div class="receipt-title">${t.schoolName}</div>
+                <div class="receipt-subtitle">${t.thermalTitle}</div>
             </div>
-        `);
-        thermalWindow.document.write('</body></html>');
-        thermalWindow.document.close();
-        thermalWindow.print();
+            <div class="receipt-body">
+                <div class="receipt-row"><span class="receipt-label">${t.studentName}:</span> <span class="receipt-val">${s.name}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.fatherNameLabel}:</span> <span class="receipt-val">${s.fatherName}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.admNoLabel}:</span> <span class="receipt-val">${s.admNo}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.class}:</span> <span class="receipt-val">${s.class}${sectionDisplay}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.dobLabel}:</span> <span class="receipt-val">${formatDate(s.dob)}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.phoneLabel}:</span> <span class="receipt-val">${s.phone}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.admissionDateLabel}:</span> <span class="receipt-val">${formatDate(s.admissionDate)}</span></div>
+            </div>
+        `;
+        document.body.appendChild(container);
+
+        try {
+            // Convert to canvas
+            const canvas = await html2canvas(container, {
+                scale: 3, // High quality
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            });
+            
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], `Student_${s.admNo}.jpg`, { type: 'image/jpeg', lastModified: new Date().getTime() });
+                
+                // Try Web Share API (Mobile Devices)
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: isUrdu ? 'طالب علم کی معلومات' : 'Student Info',
+                            text: isUrdu ? `${s.name} کی تصدیقی معلومات` : `Details for ${s.name}`
+                        });
+                    } catch (err) {
+                        console.log('Share canceled or failed:', err);
+                    }
+                } else {
+                    // Fallback to Download (for Desktop or unsupported browsers)
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `Student_${s.admNo}.jpg`;
+                    link.click();
+                    showMessage(isUrdu ? 'شیئر آپشن موجود نہیں، تصویر ڈاؤن لوڈ ہو گئی' : 'Share not supported, image downloaded.', true);
+                }
+                
+                document.body.removeChild(container);
+            }, 'image/jpeg', 0.95);
+            
+        } catch (error) {
+            console.error('Error generating image', error);
+            showMessage(isUrdu ? 'تصویر بنانے میں مسئلہ آیا' : 'Error generating image', false);
+            document.body.removeChild(container);
+        }
     };
     
     function generateCertificate(s) { 
@@ -2081,7 +1912,8 @@
         e('studentList').innerHTML = filtered.map(s => {
             const leftBadge = s.active === false ? `<span class="left-badge">${t.leftStatus}</span>` : '';
             const sectionDisplay = s.section ? ` | ${t.section}: ${s.section}` : '';
-            return `<div class="student-card"><div class="student-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-school fa-2x"></i>'}</div><div class="student-info"><div class="student-name">${s.name} ${leftBadge}</div><div class="student-details"><i class="fas fa-id-card"></i> ${t.class}: ${s.class}${sectionDisplay} | <i class="fas fa-hashtag"></i> ${s.admNo} | <i class="fas fa-users"></i> ${s.caste || ''}</div><div class="student-contact"><i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}</div><div class="student-actions"><button class="action-btn print" onclick="printStudent('${s.id}')"><i class="fas fa-print"></i> ${t.print}</button><button class="action-btn thermal" onclick="thermalPrintStudent('${s.id}')"><i class="fas fa-print"></i> ${t.thermal}</button><button class="action-btn edit" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i> ${t.edit}</button><button class="action-btn delete" onclick="deleteMe('${s.id}')"><i class="fas fa-trash"></i> ${t.delete}</button>${s.active !== false ? `<button class="action-btn pass" onclick="promoteStudent('${s.id}', true)"><i class="fas fa-check-circle"></i> ${t.pass}</button><button class="action-btn fail" onclick="promoteStudent('${s.id}', false)"><i class="fas fa-times-circle"></i> ${t.fail}</button><button class="action-btn left" onclick="markLeft('${s.id}')"><i class="fas fa-door-open"></i> ${t.left}</button>` : ''}</div></div></div>`}).join(''); 
+            // Thermal button changed to Share button
+            return `<div class="student-card"><div class="student-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fas fa-school fa-2x"></i>'}</div><div class="student-info"><div class="student-name">${s.name} ${leftBadge}</div><div class="student-details"><i class="fas fa-id-card"></i> ${t.class}: ${s.class}${sectionDisplay} | <i class="fas fa-hashtag"></i> ${s.admNo} | <i class="fas fa-users"></i> ${s.caste || ''}</div><div class="student-contact"><i class="fas fa-user"></i> ${s.fatherName} | <i class="fas fa-phone"></i> ${s.phone}</div><div class="student-actions"><button class="action-btn print" onclick="printStudent('${s.id}')"><i class="fas fa-print"></i> ${t.print}</button><button class="action-btn thermal" onclick="shareStudentInfo('${s.id}')"><i class="fas fa-share-alt"></i> ${t.thermal}</button><button class="action-btn edit" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i> ${t.edit}</button><button class="action-btn delete" onclick="deleteMe('${s.id}')"><i class="fas fa-trash"></i> ${t.delete}</button>${s.active !== false ? `<button class="action-btn pass" onclick="promoteStudent('${s.id}', true)"><i class="fas fa-check-circle"></i> ${t.pass}</button><button class="action-btn fail" onclick="promoteStudent('${s.id}', false)"><i class="fas fa-times-circle"></i> ${t.fail}</button><button class="action-btn left" onclick="markLeft('${s.id}')"><i class="fas fa-door-open"></i> ${t.left}</button>` : ''}</div></div></div>`}).join(''); 
     }
     e('searchInput').addEventListener('input', renderList);
 
