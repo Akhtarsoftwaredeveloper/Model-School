@@ -1686,8 +1686,13 @@
         const s = students.find(x => x.id === id);
         if(!s) return;
         const t = translations[isUrdu ? 'ur' : 'en'];
-        const dobInWords = s.dobInWords || dateToWords(s.dob) || '';
         const sectionDisplay = s.section ? ` (${s.section})` : '';
+        
+        // موجودہ تاریخ اور وقت حاصل کرنے کے لیے
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        const dateString = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+        const currentDateTime = `${dateString} ${timeString}`;
         
         // Show loading message
         showMessage(isUrdu ? 'تصویر بنائی جا رہی ہے...' : 'Generating image...', true);
@@ -1704,11 +1709,13 @@
             <div class="receipt-body">
                 <div class="receipt-row"><span class="receipt-label">${t.studentName}:</span> <span class="receipt-val">${s.name}</span></div>
                 <div class="receipt-row"><span class="receipt-label">${t.fatherNameLabel}:</span> <span class="receipt-val">${s.fatherName}</span></div>
-                <div class="receipt-row"><span class="receipt-label">${t.admNoLabel}:</span> <span class="receipt-val">${s.admNo}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.admNoLabel}:</span> <span class="receipt-val" style="direction:ltr; display:inline-block;">${s.admNo}</span></div>
                 <div class="receipt-row"><span class="receipt-label">${t.class}:</span> <span class="receipt-val">${s.class}${sectionDisplay}</span></div>
-                <div class="receipt-row"><span class="receipt-label">${t.dobLabel}:</span> <span class="receipt-val">${formatDate(s.dob)}</span></div>
-                <div class="receipt-row"><span class="receipt-label">${t.phoneLabel}:</span> <span class="receipt-val">${s.phone}</span></div>
-                <div class="receipt-row"><span class="receipt-label">${t.admissionDateLabel}:</span> <span class="receipt-val">${formatDate(s.admissionDate)}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.phoneLabel}:</span> <span class="receipt-val" style="direction:ltr; display:inline-block;">${s.phone}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.casteLabel}:</span> <span class="receipt-val">${s.caste || ''}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.dobLabel}:</span> <span class="receipt-val" style="direction:ltr; display:inline-block;">${formatDate(s.dob)}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.admissionDateLabel}:</span> <span class="receipt-val" style="direction:ltr; display:inline-block;">${formatDate(s.admissionDate)}</span></div>
+                <div class="receipt-row"><span class="receipt-label">${t.issuedDate}:</span> <span class="receipt-val" style="direction:ltr; display:inline-block;">${currentDateTime}</span></div>
             </div>
         `;
         document.body.appendChild(container);
